@@ -1,276 +1,239 @@
 <!doctype html>
 <html lang="pt-br">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Siebot AI | SharePoint Enterprise</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <title>Siebot AI | SharePoint Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="assets/css/style_upload.css">
+    <link rel="stylesheet" href="assets/css/style_upload.css"> 
 </head>
+<body class="tech-layout">
 
-<body class="app-layout">
-
-    <aside class="app-sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="assets/img/SIEBOT.png" alt="Logo" class="brand-logo" width="130">
-            <button class="toggle-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-        </div>
-
-        <div class="user-profile">
-            <div class="avatar">CF</div>
-            <div class="user-info">
-                <strong>Camilli</strong>
-                <span>Administrador</span>
+    <div id="doc-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-file-lines text-primary"></i> 
+                    <span>Inspeção de Objeto (Graph API)</span>
+                </div>
+                <button class="btn-close" onclick="closeDocPreview()"><i class="fa-solid fa-xmark"></i></button>
             </div>
+            <div class="modal-body" id="doc-modal-content">
+                </div>
         </div>
+    </div>
 
-        <nav class="sidebar-menu">
-            <p class="menu-label">Workspace</p>
-            <button class="menu-btn active" onclick="switchView('dashboard')"><i class="fa-solid fa-layer-group"></i>
-                <span>Dashboard</span></button>
-            <button class="menu-btn" onclick="switchView('upload')"><i class="fa-solid fa-cloud-arrow-up"></i>
-                <span>Upload Inteligente</span></button>
-            <button class="menu-btn" onclick="switchView('search')"><i class="fa-solid fa-magnifying-glass"></i>
-                <span>Busca IA</span></button>
-
-            <p class="menu-label mt-4">Apresentação CEO</p>
-            <button class="menu-btn highlight-btn" onclick="switchView('pricing')"><i class="fa-solid fa-chart-pie"></i>
-                <span>Viabilidade & Fluxos</span></button>
+    <header class="top-navbar">
+        <div class="nav-brand">
+            <img src="assets/img/SIEBOT.png" alt="Logo" class="brand-logo">
+            <span class="module-name">/ sharepoint-ai-core</span>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-tab active" onclick="switchView('workspace')"><i class="fa-solid fa-terminal"></i> Workspace</button>
+            <button class="nav-tab" onclick="switchView('architecture')"><i class="fa-solid fa-diagram-project"></i> Arquitetura & Viabilidade</button>
+            <a href="index.html" class="nav-action-btn"><i class="fa-solid fa-door-open"></i> Sair</a>
         </nav>
+    </header>
 
-        <a href="index.html" class="back-to-hub"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Voltar ao
-                Hub</span></a>
-    </aside>
+    <main class="main-canvas">
+        
+        <section id="view-workspace" class="view-panel active">
+            
+            <div class="split-layout">
+                <div class="engine-column">
+                    <div class="tech-card">
+                        <div class="card-title">Motor de Ingestão Cognitiva</div>
+                        <p class="text-muted">Processa arquivos usando Gemini, estrutura metadados e envia ao SharePoint.</p>
+                        
+                        <div id="step-upload" class="engine-step active">
+                            <select id="ai-hint" class="tech-input mb-3">
+                                <option value="auto">Detecção Automática (Recomendado)</option>
+                                <option value="rh">Forçar Contexto: Recursos Humanos</option>
+                                <option value="fin">Forçar Contexto: Financeiro</option>
+                                <option value="jur">Forçar Contexto: Jurídico</option>
+                            </select>
 
-    <main class="app-content">
-        <section id="view-dashboard" class="view-panel active">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-layer-group text-primary"></i> Dashboard de Governança</h2>
-                <p>Acompanhe os últimos documentos processados e indexados pela Inteligência Artificial.</p>
-            </div>
+                            <div class="upload-zone" id="drop-zone">
+                                <i class="fa-solid fa-arrow-up-from-bracket icon-lg"></i>
+                                <h4>Arraste o arquivo para análise</h4>
+                                <span class="text-muted">Suporta .pdf, .docx, .xml, .xlsx</span>
+                                <input type="file" id="file-input" hidden>
+                                <button class="btn-outline mt-3" onclick="document.getElementById('file-input').click()">Procurar Arquivo</button>
+                            </div>
+                        </div>
 
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <h3>1.100</h3>
-                    <p>Docs/Mês Estimados</p>
-                </div>
-                <div class="stat-card highlight">
-                    <h3>1.6M</h3>
-                    <p>Tokens de Leitura</p>
-                </div>
-                <div class="stat-card">
-                    <h3>99%</h3>
-                    <p>Precisão de Roteamento</p>
-                </div>
-            </div>
+                        <div id="step-processing" class="engine-step">
+                            <div class="console-window">
+                                <div class="console-header">root@siebot-ai:~# process_document</div>
+                                <div class="console-body" id="ai-logs"></div>
+                            </div>
+                        </div>
 
-            <h3 class="section-title mt-4">Últimos Uploads Realizados</h3>
-            <div class="table-container">
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Usuário</th>
-                            <th>Documento</th>
-                            <th>Departamento</th>
-                            <th>Pasta SharePoint</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recent-docs-list"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="view-upload" class="view-panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-microchip text-primary"></i> Motor de Indexação (Upload)</h2>
-                <p>Arraste arquivos. O motor inferirá metadados e estruturará no SharePoint Graph API.</p>
-            </div>
-
-            <div id="step-upload" class="step-card active">
-                <div class="context-bar">
-                    <label>Direcionamento (Opcional):</label>
-                    <select id="ai-hint" class="input-modern">
-                        <option value="auto">Detecção 100% Automática</option>
-                        <option value="rh">Recursos Humanos</option>
-                        <option value="fin">Financeiro</option>
-                        <option value="jur">Jurídico</option>
-                        <option value="log">Logística</option>
-                    </select>
-                </div>
-                <div class="drop-area" id="drop-zone">
-                    <i class="fa-solid fa-file-arrow-up drop-icon"></i>
-                    <h3>Arraste o documento corporativo aqui</h3>
-                    <input type="file" id="file-input" hidden>
-                    <button type="button" class="btn-primary mt-3"
-                        onclick="document.getElementById('file-input').click()">Procurar Arquivo</button>
-                </div>
-            </div>
-
-            <div id="step-processing" class="step-card">
-                <div class="terminal-box">
-                    <div class="term-header">
-                        <div class="mac-btns"><span class="r"></span><span class="y"></span><span class="g"></span>
-                        </div>Siebot AI | Processamento Ativo
+                        <div id="step-results" class="engine-step">
+                            <div class="success-alert">
+                                <i class="fa-solid fa-check-circle"></i> Documento interpretado e formatado com sucesso.
+                            </div>
+                            <div class="form-grid">
+                                <div class="col-full"><label>Nome Canônico</label><input type="text" id="meta-filename" class="tech-input hl"></div>
+                                <div class="col-half"><label>Diretório Alvo</label><input type="text" id="meta-folder" class="tech-input" readonly></div>
+                                <div class="col-half"><label>Confiança IA</label><div class="score-pill" id="ai-score">98%</div></div>
+                                <div class="col-full"><label>Tags Semânticas</label><div class="tags-container" id="meta-tags"></div></div>
+                            </div>
+                            <div class="action-row">
+                                <button class="btn-text" onclick="resetUpload()">Descartar</button>
+                                <button class="btn-filled" id="btn-submit" onclick="syncSharePoint()"><i class="fa-brands fa-microsoft"></i> Indexar no SharePoint</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="term-body" id="ai-logs"></div>
-                </div>
-            </div>
 
-            <div id="step-results" class="step-card">
-                <div class="result-header">
-                    <div class="score-badge" id="ai-score">98%</div>
-                    <div>
-                        <h3 style="margin:0; color:#166534;">Análise Concluída</h3>
-                        <p style="margin:0; font-size:0.85rem;">Pronto para envio.</p>
+                    <div class="tech-card mt-4">
+                        <div class="card-title">Busca Semântica Local</div>
+                        <div class="search-wrap">
+                            <input type="text" id="ai-search-input" class="tech-input" placeholder="O que você procura? Ex: contratos de 2026">
+                            <button class="btn-filled" onclick="runSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                        <div id="search-results-list" class="mt-3"></div>
                     </div>
                 </div>
-                <div class="form-grid">
-                    <div class="form-group col-12"><label>Nome Padronizado</label><input type="text" id="meta-filename"
-                            class="input-modern bold-text"></div>
-                    <div class="form-group col-6"><label>Pasta Destino (SharePoint)</label><input type="text"
-                            id="meta-folder" class="input-modern" readonly></div>
-                    <div class="form-group col-6"><label>Categoria</label><input type="text" id="meta-category"
-                            class="input-modern" readonly></div>
-                    <div class="form-group col-12"><label>Tags Extraídas</label>
-                        <div class="tags-wrapper" id="meta-tags"></div>
+
+                <div class="repo-column">
+                    <div class="tech-card h-100">
+                        <div class="card-title flex-between">
+                            <span>Repositório Ativo (Últimos Indexados)</span>
+                            <span class="badge">1.100 docs/mês</span>
+                        </div>
+                        <p class="text-muted mb-4">Clique em um documento para inspecionar os metadados extraídos.</p>
+                        
+                        <div class="doc-list" id="recent-docs-list">
+                            </div>
                     </div>
-                </div>
-                <div class="actions-footer">
-                    <button class="btn-ghost" onclick="resetUpload()">Descartar</button>
-                    <button class="btn-primary" id="btn-submit" onclick="syncSharePoint()"><i
-                            class="fa-brands fa-microsoft"></i> Salvar no SharePoint</button>
                 </div>
             </div>
         </section>
 
-        <section id="view-search" class="view-panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-brain text-primary"></i> Busca Semântica</h2>
-            </div>
-            <div class="search-container">
-                <div class="search-box">
-                    <input type="text" id="ai-search-input" class="input-modern"
-                        placeholder="Pesquise por contexto. Ex: Contratos de 2026...">
-                    <button class="btn-primary" onclick="runSearch()"><i class="fa-solid fa-sparkles"></i>
-                        Buscar</button>
-                </div>
-                <div id="search-results-list" class="results-list mt-4"></div>
-            </div>
-        </section>
+        <section id="view-architecture" class="view-panel">
+            
+            <div class="tech-card mb-4">
+                <div class="card-title"><i class="fa-solid fa-calculator text-primary"></i> Memória de Cálculo & Custos (Base Mensal)</div>
+                <div class="calc-grid">
+                    
+                    <div class="calc-box winner-box">
+                        <div class="box-head">
+                            <h5>Gemini 2.5 Flash <span>Recomendado</span></h5>
+                            <div class="final-price">R$ 5,22 <span>/mês</span></div>
+                        </div>
+                        <div class="math-proof">
+                            <div class="math-row"><span>Volume Operacional:</span> <strong>1.100 documentos</strong></div>
+                            <div class="math-row"><span>Tokens de Entrada (1.500/doc):</span> <strong>1.650.000 tokens</strong></div>
+                            <div class="math-row"><span>Tokens de Saída (200/doc):</span> <strong>220.000 tokens</strong></div>
+                            <hr>
+                            <div class="math-row"><span>Custo Entrada (US$ 0,30 / 1M):</span> <strong>US$ 0,495</strong></div>
+                            <div class="math-row"><span>Custo Saída (US$ 2,50 / 1M):</span> <strong>US$ 0,550</strong></div>
+                            <div class="math-row"><span>Total USD:</span> <strong>US$ 1,045</strong></div>
+                            <div class="math-row highlight"><span>Total BRL (Cotação R$ 5,00):</span> <strong>R$ 5,22</strong></div>
+                        </div>
+                    </div>
 
-        <section id="view-pricing" class="view-panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-chart-pie text-primary"></i> Viabilidade do Projeto & Arquitetura</h2>
-                <p>Comparativo de custo x benefício e diagramas detalhados (Base: 1.100 docs / 3.300 páginas mensais).
-                </p>
-            </div>
+                    <div class="calc-box">
+                        <div class="box-head"><h5>GPT-5.4 mini</h5><div class="final-price text-muted">R$ 11,13 <span>/mês</span></div></div>
+                        <div class="math-proof">
+                            <div class="math-row"><span>In: US$ 0,75 / 1M</span> <strong>US$ 1,23</strong></div>
+                            <div class="math-row"><span>Out: US$ 4,50 / 1M</span> <strong>US$ 0,99</strong></div>
+                            <div class="math-row highlight"><span>Total Estimado:</span> <strong>R$ 11,13</strong></div>
+                        </div>
+                        
+                        <div class="box-head mt-4"><h5>Gemini 2.5 Pro</h5><div class="final-price text-muted">R$ 21,31 <span>/mês</span></div></div>
+                        <div class="math-proof">
+                            <div class="math-row"><span>In: US$ 1,25 / 1M</span> <strong>US$ 2,06</strong></div>
+                            <div class="math-row"><span>Out: US$ 10,00 / 1M</span> <strong>US$ 2,20</strong></div>
+                            <div class="math-row highlight"><span>Total Estimado:</span> <strong>R$ 21,31</strong></div>
+                        </div>
+                    </div>
 
-            <div class="pricing-grid">
-                <div class="chart-container"><canvas id="costChart"></canvas></div>
-                <div class="cost-cards">
-                    <h3 class="section-title">Nossa API Própria (Mensal)</h3>
-                    <div class="price-card winner">
-                        <div class="pc-header">Gemini 2.5 Flash <span>O Escolhido</span></div>
-                        <div class="pc-price">~R$ 5,22</div>
-                    </div>
-                    <div class="price-card">
-                        <div class="pc-header">GPT-5.4 mini</div>
-                        <div class="pc-price">~R$ 11,13</div>
-                    </div>
-                    <div class="price-card">
-                        <div class="pc-header">Gemini 2.5 Pro</div>
-                        <div class="pc-price">~R$ 21,31</div>
-                    </div>
-                    <div class="price-card">
-                        <div class="pc-header">GPT-5.4</div>
-                        <div class="pc-price">~R$ 37,12</div>
-                    </div>
-                    <h3 class="section-title mt-4">Microsoft Syntex (Alternativa)</h3>
-                    <div class="price-card loser">
-                        <div class="pc-header">Syntex Estruturado / Livre</div>
-                        <div class="pc-price">~R$ 825,00</div>
-                        <div class="pc-sub">US$ 0,05 por página</div>
-                    </div>
-                    <div class="price-card">
-                        <div class="pc-header">Syntex Pré-criado</div>
-                        <div class="pc-price">~R$ 165,00</div>
-                        <div class="pc-sub">US$ 0,01 por página</div>
-                    </div>
-                    <div class="price-card">
-                        <div class="pc-header">Syntex Não Estruturado</div>
-                        <div class="pc-price">~R$ 82,50</div>
-                        <div class="pc-sub">US$ 0,005 por página</div>
+                    <div class="calc-box loser-box">
+                        <div class="box-head">
+                            <h5>Microsoft Syntex (Alternativa)</h5>
+                            <div class="final-price">R$ 825,00 <span>/mês</span></div>
+                        </div>
+                        <div class="math-proof">
+                            <div class="math-row"><span>Cobrança por página:</span> <strong>3 páginas/doc</strong></div>
+                            <div class="math-row"><span>Volume em páginas:</span> <strong>3.300 páginas/mês</strong></div>
+                            <hr>
+                            <div class="math-row"><span>Estruturado (US$ 0,05/pág):</span> <strong class="text-danger">US$ 165,00 (R$ 825,00)</strong></div>
+                            <div class="math-row"><span>Pré-criado (US$ 0,01/pág):</span> <strong>US$ 33,00 (R$ 165,00)</strong></div>
+                            <div class="math-row"><span>Não-Estrut. (US$ 0,005/pág):</span> <strong>US$ 16,50 (R$ 82,50)</strong></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <h3 class="section-title mt-5 mb-3">Diagramas de Arquitetura</h3>
-            <div class="flow-tabs">
-                <button class="ft-btn active" onclick="showFlow('api')">Proposta: Fluxo API Própria</button>
-                <button class="ft-btn" onclick="showFlow('automate')">Cenário: Power Automate</button>
-                <button class="ft-btn" onclick="showFlow('syntex')">Cenário: MS Syntex</button>
-            </div>
-
-            <div id="flow-api" class="flow-diagram active">
-                <div class="flow-desc"><strong>Vantagem:</strong> Centraliza a regra de negócio, altíssima velocidade e
-                    elimina dependências de Low-Code. Custo absurdamente menor.</div>
-                <div class="flow-track">
-                    <div class="flow-step"><i class="fa-solid fa-user"></i> Usuário<br><small>Upload</small></div>
-                    <div class="flow-arrow arrow-anim"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Envia Leitura</small>
+            <div class="tech-card">
+                <div class="card-title flex-between">
+                    <span><i class="fa-solid fa-code-branch text-primary"></i> Diagramas de Sequência (UML)</span>
+                    <div class="flow-tabs">
+                        <button class="ft-btn active" onclick="showFlow('api')">API Própria (Recomendado)</button>
+                        <button class="ft-btn" onclick="showFlow('automate')">Power Automate (Descartado)</button>
+                        <button class="ft-btn" onclick="showFlow('syntex')">MS Syntex (Descartado)</button>
                     </div>
-                    <div class="flow-arrow arrow-anim"><i class="fa-solid fa-arrows-turn-right"></i> JSON <i
-                            class="fa-solid fa-arrows-turn-left"></i></div>
-                    <div class="flow-step highlight-step pulse-anim"><i class="fa-solid fa-microchip"></i> API
-                        IA<br><small>Gemini Flash</small></div>
-                    <div class="flow-arrow arrow-anim"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-brands fa-microsoft"></i> SharePoint<br><small>Salva c/
-                            Metadados</small></div>
                 </div>
-            </div>
 
-            <div id="flow-automate" class="flow-diagram">
-                <div class="flow-desc" style="border-color:#ef4444;"><strong>Desvantagem:</strong> Gatilhos do Automate
-                    são lentos, criam gargalos de fila e necessitam de pastas de transição (Dropzone).</div>
-                <div class="flow-track">
-                    <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Upload Dropzone</small>
+                <div id="flow-api" class="uml-diagram active">
+                    <div class="uml-description">
+                        <i class="fa-solid fa-check-circle text-primary"></i> <strong>Decisão Arquitetural:</strong> Centraliza a regra de negócio no nosso Back-End. Comunicação REST super rápida, sem gatilhos lentos de pastas e custo de centavos.
                     </div>
-                    <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-regular fa-folder"></i> SharePoint<br><small>Dropzone</small>
+                    
+                    <div class="uml-grid">
+                        <div class="uml-actor">Usuário</div>
+                        <div class="uml-actor">Back-End (Web)</div>
+                        <div class="uml-actor">API IA (Gemini)</div>
+                        <div class="uml-actor">SharePoint (Graph API)</div>
+                        
+                        <div class="uml-msg right" style="grid-column: 1 / 2; grid-row: 2;">1. Upload do Arquivo</div>
+                        <div class="uml-msg right" style="grid-column: 2 / 3; grid-row: 3;">2. Envia doc para leitura (Base64)</div>
+                        <div class="uml-msg left dashed text-primary" style="grid-column: 2 / 3; grid-row: 4;">3. Retorna JSON estruturado</div>
+                        <div class="uml-msg self" style="grid-column: 2 / 2; grid-row: 5;">4. Processa, renomeia e monta payload</div>
+                        <div class="uml-msg right" style="grid-column: 2 / 4; grid-row: 6;">5. Upload via Graph API / Rest</div>
+                        <div class="uml-msg self" style="grid-column: 4 / 4; grid-row: 7;">6. Salva na pasta com metadados</div>
+                        <div class="uml-msg left dashed" style="grid-column: 2 / 4; grid-row: 8;">7. Confirmação HTTP 201 Created</div>
+                        <div class="uml-msg left dashed" style="grid-column: 1 / 2; grid-row: 9;">8. Feedback visual de sucesso</div>
                     </div>
-                    <div class="flow-arrow"><i class="fa-solid fa-bolt" style="color:#eab308;"></i> Gatilho</div>
-                    <div class="flow-step highlight-step-red"><i class="fa-solid fa-gears"></i>
-                        Automate<br><small>Renomeia e Move</small></div>
-                    <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-solid fa-folder-open"></i> Pasta Final</div>
                 </div>
-            </div>
 
-            <div id="flow-syntex" class="flow-diagram">
-                <div class="flow-desc" style="border-color:#ef4444;"><strong>Desvantagem:</strong> Custo altíssimo por
-                    página (até R$ 825/mês) e engessa o sistema dentro do ecossistema Microsoft.</div>
-                <div class="flow-track">
-                    <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Upload Cru</small></div>
-                    <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-brands fa-microsoft"></i> SharePoint<br><small>Aciona IA</small>
+                <div id="flow-automate" class="uml-diagram">
+                    <div class="uml-description error">
+                        <i class="fa-solid fa-triangle-exclamation text-danger"></i> <strong>Motivo do Descarte:</strong> Exige criar "Pastas Lixo" (Dropzones). O gatilho do Automate é baseado em pooling, gerando atrasos de até 5 minutos na rede.
                     </div>
-                    <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step highlight-step-red"><i class="fa-solid fa-brain"></i> MS
-                        Syntex<br><small>Extrai Dados</small></div>
-                    <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-solid fa-table-columns"></i>
-                        Colunas<br><small>Atualizadas</small></div>
+                    <div class="uml-grid cols-5">
+                        <div class="uml-actor">Usuário</div><div class="uml-actor">Back-End</div><div class="uml-actor">Dropzone (SP)</div><div class="uml-actor text-danger">Automate</div><div class="uml-actor">Pasta Final (SP)</div>
+                        
+                        <div class="uml-msg right" style="grid-column: 1 / 2; grid-row: 2;">1. Upload do Arquivo</div>
+                        <div class="uml-msg right" style="grid-column: 2 / 3; grid-row: 3;">2. Upload oculto (Cru)</div>
+                        <div class="uml-msg right text-danger" style="grid-column: 3 / 4; grid-row: 4;"><i class="fa-solid fa-bolt"></i> 3. Gatilho de Novo Arquivo</div>
+                        <div class="uml-msg right" style="grid-column: 4 / 5; grid-row: 5;">4. Lê metadados, renomeia e move</div>
+                        <div class="uml-msg left dashed" style="grid-column: 2 / 5; grid-row: 6;">5. Confirmação demorada...</div>
+                    </div>
                 </div>
+
+                <div id="flow-syntex" class="uml-diagram">
+                    <div class="uml-description error">
+                        <i class="fa-solid fa-triangle-exclamation text-danger"></i> <strong>Motivo do Descarte:</strong> Custo abusivo de R$ 825,00/mês. Lock-in tecnológico severo com a infraestrutura da Microsoft.
+                    </div>
+                    <div class="uml-grid cols-4">
+                        <div class="uml-actor">Usuário</div><div class="uml-actor">Back-End</div><div class="uml-actor text-danger">MS Syntex</div><div class="uml-actor">SharePoint</div>
+                        
+                        <div class="uml-msg right" style="grid-column: 1 / 2; grid-row: 2;">1. Upload do Arquivo</div>
+                        <div class="uml-msg right" style="grid-column: 2 / 4; grid-row: 3;">2. Upload do arquivo cru</div>
+                        <div class="uml-msg left text-danger" style="grid-column: 3 / 4; grid-row: 4;">3. Aciona IA interna</div>
+                        <div class="uml-msg right text-danger" style="grid-column: 3 / 4; grid-row: 5;">4. Analisa e extrai dados (Cobrança)</div>
+                        <div class="uml-msg self" style="grid-column: 4 / 4; grid-row: 6;">5. Atualiza colunas no banco de dados</div>
+                    </div>
+                </div>
+
             </div>
         </section>
     </main>
 
     <script src="assets/js/upload_ai.js"></script>
 </body>
-
 </html>

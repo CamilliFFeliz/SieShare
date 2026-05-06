@@ -1,239 +1,278 @@
 /**
  * ----------------------------------------------------
- * 1. DATABASE (LOCALSTORAGE MOCK)
+ * 1. PERSISTÊNCIA LOCAL (BANCO DE DADOS)
  * ----------------------------------------------------
  */
-const DB_KEY = 'SIEBOT_SHAREPOINT_DATA';
-const INITIAL_MOCK_DATA = [
-    { id: 1, name: "CONTRATO_ALUGUEL_SEDE_2026.pdf", dept: "Jurídico", folder: "/Juridico/Contratos", text: "minuta do contrato de locação da sede assinado", date: "2026-05-01", user: "CF" },
-    { id: 2, name: "NF_COMPRA_COMPUTADORES_MAIO.xml", dept: "Financeiro", folder: "/Financeiro/Notas", text: "nota fiscal eletrônica equipamentos ti faturado", date: "2026-05-02", user: "TS" },
-    { id: 3, name: "CV_ANALISTA_SISTEMAS_JOAO.pdf", dept: "Recursos Humanos", folder: "/RH/Admissoes", text: "currículo experiência desenvolvimento javascript", date: "2026-05-03", user: "CF" },
-    { id: 4, name: "ROMANEIO_CARGA_SP_RJ.pdf", dept: "Logística", folder: "/Logistica/Operacao", text: "romaneio de carga transporte mercadorias são paulo", date: "2026-05-04", user: "TS" },
-    { id: 5, name: "ADITIVO_FORNECEDOR_X.docx", dept: "Jurídico", folder: "/Juridico/Aditivos", text: "termo aditivo ao contrato de prestação de serviços", date: "2026-05-04", user: "CF" },
-    { id: 6, name: "RELATORIO_AUDITORIA_Q1.pdf", dept: "Financeiro", folder: "/Financeiro/Auditoria", text: "relatório de auditoria interna primeiro trimestre", date: "2026-05-05", user: "CF" },
-    { id: 7, name: "COMPROVANTE_LUZ_ABRIL.pdf", dept: "Financeiro", folder: "/Financeiro/Pagamentos", text: "comprovante de pagamento de energia elétrica copel", date: "2026-05-05", user: "TS" },
-    { id: 8, name: "FOLHA_PAGAMENTO_ABRIL.xlsx", dept: "Recursos Humanos", folder: "/RH/Fechamento", text: "planilha de fechamento da folha de pagamento colaboradores", date: "2026-05-06", user: "CF" },
-    { id: 9, name: "PROCURACAO_REPRESENTACAO.pdf", dept: "Jurídico", folder: "/Juridico/Procuracoes", text: "procuração pública para representação legal da empresa", date: "2026-05-06", user: "TS" },
-    { id: 10, name: "CTE_TRANSPORTE_SUL.xml", dept: "Logística", folder: "/Logistica/CTE", text: "conhecimento de transporte eletrônico carga região sul", date: "2026-05-06", user: "CF" }
+const DB_KEY = 'SIEBOT_SHAREPOINT_DB_V2';
+
+// 10 Mockups de Altíssimo Padrão
+const INITIAL_DATA = [
+    { id: 'doc_1', name: "CONTRATO_ALUGUEL_SEDE_2026.pdf", dept: "Jurídico", folder: "/SharePoint/Juridico/Contratos", text: "Minuta do contrato de locação da sede corporativa assinado. Ref: 2026.", date: "2026-05-01", user: "TS", tags: ["Legal", "Contrato"], conf: 98.4 },
+    { id: 'doc_2', name: "NF_COMPRA_COMPUTADORES_MAIO.xml", dept: "Financeiro", folder: "/SharePoint/Financeiro/Notas", text: "Nota fiscal eletrônica (NFe) para equipamentos de TI faturados em maio.", date: "2026-05-02", user: "CF", tags: ["Auditoria", "Impostos"], conf: 99.1 },
+    { id: 'doc_3', name: "CV_ANALISTA_SISTEMAS_JOAO.pdf", dept: "Recursos Humanos", folder: "/SharePoint/RH/Admissoes", text: "Currículo do candidato com experiência em desenvolvimento Javascript. Admissão.", date: "2026-05-03", user: "CF", tags: ["Confidencial", "RH"], conf: 94.2 },
+    { id: 'doc_4', name: "ROMANEIO_CARGA_SP_RJ.pdf", dept: "Logística", folder: "/SharePoint/Logistica/Operacao", text: "Romaneio de carga para transporte de mercadorias no trecho São Paulo x Rio.", date: "2026-05-04", user: "TS", tags: ["Operacional", "Rastreio"], conf: 96.7 },
+    { id: 'doc_5', name: "ADITIVO_FORNECEDOR_X.docx", dept: "Jurídico", folder: "/SharePoint/Juridico/Aditivos", text: "Termo aditivo ao contrato vigente de prestação de serviços essenciais.", date: "2026-05-04", user: "CF", tags: ["Legal", "Revisão"], conf: 92.0 },
+    { id: 'doc_6', name: "RELATORIO_AUDITORIA_Q1.pdf", dept: "Financeiro", folder: "/SharePoint/Financeiro/Auditoria", text: "Relatório oficial de auditoria interna referente ao primeiro trimestre (Q1).", date: "2026-05-05", user: "CF", tags: ["Auditoria", "Financeiro"], conf: 97.8 },
+    { id: 'doc_7', name: "COMPROVANTE_LUZ_ABRIL.pdf", dept: "Financeiro", folder: "/SharePoint/Financeiro/Pagamentos", text: "Comprovante de pagamento de energia elétrica referente à concessionária COPEL.", date: "2026-05-05", user: "TS", tags: ["Contas Pagas", "Financeiro"], conf: 99.5 },
+    { id: 'doc_8', name: "FOLHA_PAGAMENTO_ABRIL.xlsx", dept: "Recursos Humanos", folder: "/SharePoint/RH/Fechamento", text: "Planilha base de fechamento da folha de pagamento de todos os colaboradores.", date: "2026-05-06", user: "CF", tags: ["Confidencial", "Fechamento"], conf: 98.9 },
+    { id: 'doc_9', name: "PROCURACAO_REPRESENTACAO.pdf", dept: "Jurídico", folder: "/SharePoint/Juridico/Procuracoes", text: "Procuração pública outorgada para fins de representação legal e civil da empresa.", date: "2026-05-06", user: "TS", tags: ["Legal", "Procuração"], conf: 95.5 },
+    { id: 'doc_10', name: "CTE_TRANSPORTE_SUL.xml", dept: "Logística", folder: "/SharePoint/Logistica/CTE", text: "Conhecimento de transporte eletrônico consolidado para carga região sul.", date: "2026-05-06", user: "CF", tags: ["Operacional", "CTE"], conf: 99.9 }
 ];
 
 function getDB() {
     let data = localStorage.getItem(DB_KEY);
     if (!data) {
-        localStorage.setItem(DB_KEY, JSON.stringify(INITIAL_MOCK_DATA));
-        return INITIAL_MOCK_DATA;
+        localStorage.setItem(DB_KEY, JSON.stringify(INITIAL_DATA));
+        return INITIAL_DATA;
     }
     return JSON.parse(data);
 }
 
-function saveToDB(docData) {
+function saveToDB(doc) {
     let db = getDB();
-    db.unshift({
-        id: Date.now(),
-        name: docData.suggestedName,
-        dept: docData.department,
-        folder: docData.folder,
-        text: `Documento indexado via IA. Tags: ${docData.tags.join(' ')}`,
+    const newEntry = {
+        id: 'doc_' + Date.now(),
+        name: doc.suggestedName,
+        dept: doc.department,
+        folder: doc.folder,
+        text: `Metadados e contexto extraídos via Gemini AI 2.5. Tags base: ${doc.tags.join(', ')}.`,
         date: new Date().toISOString().split('T')[0],
-        user: "CF"
-    });
+        user: "EU",
+        tags: doc.tags,
+        conf: doc.confidence
+    };
+    db.unshift(newEntry); // Coloca em primeiro
     localStorage.setItem(DB_KEY, JSON.stringify(db));
+    return newEntry;
 }
 
 /**
  * ----------------------------------------------------
- * 2. CÉREBRO DA IA (MOCK NLP)
+ * 2. CÉREBRO DA IA (PROCESSAMENTO LOCAL MOCK)
  * ----------------------------------------------------
  */
-const KNOWLEDGE_BASE = {
-    rh: { nome: "Recursos Humanos", pasta: "/SharePoint/RH/Documentacao", keywords: ['curriculo', 'cv', 'admissao', 'folha', 'ferias'], tags: ['Confidencial', 'RH'] },
-    fin: { nome: "Financeiro", pasta: "/SharePoint/Financeiro/Notas", keywords: ['nota', 'fiscal', 'fatura', 'boleto', 'comprovante'], tags: ['Auditoria', 'Financeiro'] },
-    jur: { nome: "Jurídico", pasta: "/SharePoint/Juridico/Contratos", keywords: ['contrato', 'distrato', 'minuta', 'procuracao', 'aditivo'], tags: ['Legal', 'Contratos'] },
-    log: { nome: "Logística", pasta: "/SharePoint/Logistica/Operacao", keywords: ['romaneio', 'cte', 'frete', 'entrega', 'carga'], tags: ['Operacional', 'Logística'] }
+const KB = {
+    rh: { n: "Recursos Humanos", p: "/SharePoint/RH/Documentos", k: ['curriculo', 'cv', 'admissao', 'folha', 'ferias'], t: ['Confidencial', 'RH'] },
+    fin: { n: "Financeiro", p: "/SharePoint/Financeiro/Notas", k: ['nota', 'fiscal', 'fatura', 'boleto', 'comprovante', 'auditoria'], t: ['Auditoria', 'Financeiro'] },
+    jur: { n: "Jurídico", p: "/SharePoint/Juridico/Contratos", k: ['contrato', 'distrato', 'minuta', 'procuracao', 'aditivo'], t: ['Legal', 'Contratos'] },
+    log: { n: "Logística", p: "/SharePoint/Logistica/Operacao", k: ['romaneio', 'cte', 'frete', 'entrega', 'carga'], t: ['Operacional', 'Logística'] }
 };
 
-async function analyzeFileContent(file, hint, logCallback) {
+async function processIntelligence(file, hint, logCb) {
     const text = file.name.toLowerCase();
-    let bestMatch = null;
-    let maxScore = 0;
+    let match = null;
+    let maxSc = 0;
 
-    logCallback(`[SYSTEM] Recebendo arquivo: ${file.name}`);
-    await new Promise(r => setTimeout(r, 600));
-    logCallback(`[AI CORE] Iniciando vetorização semântica (1.500 tokens estimados)...`);
+    logCb(`Parsing raw file: ${file.name}`);
+    await new Promise(r => setTimeout(r, 500));
+    logCb(`Calling Gemini 2.5 Flash API... (Payload: Base64, est. 1500 tokens)`);
     await new Promise(r => setTimeout(r, 800));
 
-    for (const [id, data] of Object.entries(KNOWLEDGE_BASE)) {
-        let score = hint === id ? 3 : 0;
-        if (hint === id) logCallback(`[BIAS] Direcionamento cognitivo aplicado: ${data.nome}`, true);
-
-        data.keywords.forEach(kw => { if (text.includes(kw)) score += 1; });
-        if (score > maxScore) { maxScore = score; bestMatch = { id, ...data }; }
+    for (const [id, data] of Object.entries(KB)) {
+        let score = hint === id ? 5 : 0;
+        if (hint === id) logCb(`Bias injected for context: [${data.n}]`, true);
+        data.k.forEach(kw => { if (text.includes(kw)) score += 2; });
+        if (score > maxSc) { maxSc = score; match = { id, ...data }; }
     }
 
-    await new Promise(r => setTimeout(r, 900));
+    await new Promise(r => setTimeout(r, 700));
 
-    if (!bestMatch) {
-        logCallback("[WARN] Baixa similaridade. Classificação genérica aplicada.", false);
-        return { department: "Não Classificado", folder: "/SharePoint/Geral/Triagem", suggestedName: `DOC_${Date.now()}`, tags: ['Revisão Manual'], confidence: 55.4 };
+    if (!match) {
+        logCb("Low confidence. Applying fallback generic routing.", false);
+        return { department: "Triagem", folder: "/SharePoint/Triagem_Manual", suggestedName: `RAW_${Date.now()}`, tags: ['Revisar'], confidence: 55.4 };
     }
 
-    let conf = Math.min(99.9, (maxScore * 15) + 60 + Math.random() * 5).toFixed(1);
-    logCallback(`[MATCH] Padrão reconhecido. Categoria: ${bestMatch.nome} (${conf}%)`, true);
-    await new Promise(r => setTimeout(r, 600));
-    logCallback(`[SHAREPOINT] Preparando metadados para Graph API...`);
+    let conf = Math.min(99.9, (maxSc * 8) + 70 + Math.random() * 5).toFixed(1);
+    logCb(`Context Match Found: ${match.n} (Confidence: ${conf}%)`, true);
+    await new Promise(r => setTimeout(r, 500));
+    logCb(`Generating strict JSON output for Graph API...`);
 
     const ext = file.name.split('.').pop();
-    const cleanName = file.name.replace('.' + ext, '').substring(0, 15).replace(/\W/g, '_').toUpperCase();
+    const cName = file.name.replace('.' + ext, '').substring(0, 15).replace(/\W/g, '_').toUpperCase();
 
     return {
-        department: bestMatch.nome, folder: bestMatch.pasta,
-        suggestedName: `${bestMatch.id.toUpperCase()}_${new Date().toISOString().split('T')[0].replace(/-/g, '')}_${cleanName}_V1.${ext}`,
-        tags: [...bestMatch.tags, 'Indexado via IA'], confidence: conf
+        department: match.n, folder: match.p,
+        suggestedName: `${match.id.toUpperCase()}_${new Date().toISOString().split('T')[0].replace(/-/g, '')}_${cName}_V1.${ext}`,
+        tags: [...match.t, 'AI_Processed'], confidence: conf
     };
 }
 
 /**
  * ----------------------------------------------------
- * 3. CONTROLE DA INTERFACE E EVENTOS
+ * 3. CONTROLE DA INTERFACE (UI & EVENTOS)
  * ----------------------------------------------------
  */
-let currentUploadData = null;
+let currentTempDoc = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadDashboard();
-    initUploader();
-    initChart();
-    const searchInput = document.getElementById('ai-search-input');
-    if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') runSearch(); });
-    }
+    loadRepositoryList();
+    setupDropzone();
 });
 
-// UI: Sidebar
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
-
-// UI: Abas
+// Navegação Superior
 function switchView(viewId) {
-    document.querySelectorAll('.view-panel, .menu-btn').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.view-panel, .nav-tab').forEach(el => el.classList.remove('active'));
     document.getElementById(`view-${viewId}`).classList.add('active');
     if (event && event.currentTarget) event.currentTarget.classList.add('active');
-    if (viewId === 'dashboard') loadDashboard();
+    if (viewId === 'workspace') loadRepositoryList();
 }
 
-// UI: Carrega Dashboard
-function loadDashboard() {
-    const tbody = document.getElementById('recent-docs-list');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-    getDB().slice(0, 10).forEach(doc => {
-        const icon = doc.name.includes('.pdf') ? 'fa-file-pdf text-danger' : (doc.name.includes('.xml') ? 'fa-file-code text-warning' : 'fa-file-word text-primary');
-        tbody.innerHTML += `
-            <tr>
-                <td><div class="avatar-sm">${doc.user}</div></td>
-                <td><strong><i class="fa-solid ${icon}"></i> ${doc.name}</strong></td>
-                <td><span class="dept-badge">${doc.dept}</span></td>
-                <td><code class="folder-path">${doc.folder}</code></td>
-                <td>${doc.date}</td>
-            </tr>`;
+// Navegação de Fluxos (Viabilidade)
+function showFlow(id) {
+    document.querySelectorAll('.uml-diagram, .ft-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`flow-${id}`).classList.add('active');
+    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+}
+
+// Carregar Lista do Repositório (Tabela Direita)
+function loadRepositoryList() {
+    const list = document.getElementById('recent-docs-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    getDB().forEach(doc => {
+        const iconColor = doc.name.includes('.pdf') ? '#de350b' : (doc.name.includes('.xml') ? '#ff991f' : '#0052cc');
+        const iconType = doc.name.includes('.pdf') ? 'fa-file-pdf' : (doc.name.includes('.xml') ? 'fa-file-code' : 'fa-file-word');
+
+        // Renderiza a linha que abre o Modal
+        list.innerHTML += `
+            <div class="doc-row" onclick="openDocPreview('${doc.id}')">
+                <div class="doc-icon" style="color: ${iconColor};"><i class="fa-solid ${iconType}"></i></div>
+                <div class="doc-info">
+                    <div class="doc-name">${doc.name}</div>
+                    <div class="doc-path">${doc.folder}</div>
+                </div>
+                <div class="doc-date">${doc.date}</div>
+            </div>
+        `;
     });
 }
 
-// UI: Inicializa Upload e Drag & Drop
-function initUploader() {
+// MODAL DE VISUALIZAÇÃO DE DOCUMENTO (A MÁGICA VISUAL)
+function openDocPreview(docId) {
+    const doc = getDB().find(d => d.id === docId);
+    if (!doc) return;
+
+    const modal = document.getElementById('doc-modal');
+    const content = document.getElementById('doc-modal-content');
+
+    const iconType = doc.name.includes('.pdf') ? 'fa-file-pdf text-danger' : 'fa-file-word text-primary';
+
+    content.innerHTML = `
+        <div style="text-align:center; margin-bottom:20px;">
+            <i class="fa-solid ${iconType}" style="font-size: 4rem;"></i>
+            <h3 style="margin: 15px 0 5px; font-family: var(--font-code); font-size: 1.1rem;">${doc.name}</h3>
+            <span class="badge" style="font-size: 0.8rem;">${doc.dept}</span>
+        </div>
+        <hr style="border:0; border-top:1px solid var(--border); margin: 20px 0;">
+        <div style="display:flex; flex-direction:column; gap:12px; font-size: 0.9rem;">
+            <div style="display:flex; justify-content:space-between;"><strong>Path Graph API:</strong> <code style="color:#0052cc">${doc.folder}</code></div>
+            <div style="display:flex; justify-content:space-between;"><strong>Responsável:</strong> <span>${doc.user}</span></div>
+            <div style="display:flex; justify-content:space-between;"><strong>Confiança IA:</strong> <span style="color:#00875a; font-weight:bold;">${doc.conf || 98.0}%</span></div>
+            <div>
+                <strong style="display:block; margin-bottom:5px;">Contexto Extraído (JSON Payload):</strong>
+                <div style="background:#f4f5f7; padding:10px; border-radius:6px; font-style:italic;">"${doc.text}"</div>
+            </div>
+            <div>
+                <strong style="display:block; margin-bottom:5px;">Etiquetas Semânticas:</strong>
+                <div class="tags-container">
+                    ${doc.tags.map(t => `<span class="tag-sm">${t}</span>`).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    modal.classList.add('active');
+}
+
+function closeDocPreview() {
+    document.getElementById('doc-modal').classList.remove('active');
+}
+
+// Configura o Dropzone (Drag and Drop)
+function setupDropzone() {
     const dz = document.getElementById('drop-zone');
     const fi = document.getElementById('file-input');
     if (!dz || !fi) return;
 
-    fi.addEventListener('change', e => { if (e.target.files.length) processFile(e.target.files[0]); });
+    fi.addEventListener('change', e => { if (e.target.files.length) runEngine(e.target.files[0]); });
     ['dragover', 'drop', 'dragenter', 'dragleave'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }));
     dz.addEventListener('dragover', () => dz.classList.add('dragover'));
     dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
-    dz.addEventListener('drop', e => { dz.classList.remove('dragover'); if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]); });
+    dz.addEventListener('drop', e => { dz.classList.remove('dragover'); if (e.dataTransfer.files.length) runEngine(e.dataTransfer.files[0]); });
 }
 
-// UI: Processa Arquivo e mostra no Terminal
-async function processFile(file) {
-    document.querySelectorAll('#view-upload .step-card').forEach(el => el.classList.remove('active'));
+// Controle do Upload Step-by-Step
+async function runEngine(file) {
+    document.querySelectorAll('.engine-step').forEach(el => el.classList.remove('active'));
     document.getElementById('step-processing').classList.add('active');
 
     const term = document.getElementById('ai-logs'); term.innerHTML = '';
-    const print = (txt, hl = false) => { term.innerHTML += `<div class="log-line ${hl ? 'log-hl' : ''}"><span>[${new Date().toLocaleTimeString()}]</span> ${txt}</div>`; term.scrollTop = term.scrollHeight; };
+    const log = (txt, hl = false) => { term.innerHTML += `<div class="log-line ${hl ? 'log-hl' : ''}"><span>[~]</span> ${txt}</div>`; term.scrollTop = term.scrollHeight; };
 
-    const res = await analyzeFileContent(file, document.getElementById('ai-hint').value, print);
+    const res = await processIntelligence(file, document.getElementById('ai-hint').value, log);
     await new Promise(r => setTimeout(r, 1000));
 
-    currentUploadData = res;
+    currentTempDoc = res;
     document.getElementById('ai-score').innerText = `${Math.round(res.confidence)}%`;
     document.getElementById('meta-filename').value = res.suggestedName;
     document.getElementById('meta-folder').value = res.folder;
-    document.getElementById('meta-category').value = res.department;
 
     const tagsDiv = document.getElementById('meta-tags'); tagsDiv.innerHTML = '';
-    res.tags.forEach(t => tagsDiv.innerHTML += `<span class="tag-pill"><i class="fa-solid fa-tag"></i> ${t}</span>`);
+    res.tags.forEach(t => tagsDiv.innerHTML += `<span class="tag-sm">${t}</span>`);
 
     document.getElementById('step-processing').classList.remove('active');
     document.getElementById('step-results').classList.add('active');
 }
 
-// UI: Salva no Banco e Finaliza
+// Salva e atualiza o visual
 function syncSharePoint() {
     const btn = document.getElementById('btn-submit');
     const orig = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizando...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> API Request...';
+
     setTimeout(() => {
-        if (currentUploadData) saveToDB(currentUploadData);
-        alert("Upload salvo e indexado com sucesso!");
+        if (currentTempDoc) {
+            const novoDoc = saveToDB(currentTempDoc);
+            loadRepositoryList(); // Recarrega a lista lateral na mesma hora!
+
+            // Abre o doc salvo de brinde para o usuário ver
+            setTimeout(() => openDocPreview(novoDoc.id), 300);
+        }
         resetUpload();
         btn.innerHTML = orig;
     }, 1000);
 }
 
 function resetUpload() {
-    document.getElementById('file-input').value = ''; currentUploadData = null;
-    document.querySelectorAll('#view-upload .step-card').forEach(el => el.classList.remove('active'));
+    document.getElementById('file-input').value = ''; currentTempDoc = null;
+    document.querySelectorAll('.engine-step').forEach(el => el.classList.remove('active'));
     document.getElementById('step-upload').classList.add('active');
 }
 
-// UI: Busca
+// Busca Integrada no Banco
 function runSearch() {
-    const query = document.getElementById('ai-search-input').value.toLowerCase();
-    const list = document.getElementById('search-results-list');
-    if (!query) return;
-    list.innerHTML = `<div style="padding:20px; text-align:center; color:#64748b;"><i class="fa-solid fa-circle-notch fa-spin"></i> Varrendo banco vetorial local...</div>`;
+    const q = document.getElementById('ai-search-input').value.toLowerCase();
+    const resList = document.getElementById('search-results-list');
+    if (!q) return;
+
+    resList.innerHTML = `<div style="text-align:center; padding:15px; color:#5e6c84;">Compilando vetores de busca...</div>`;
 
     setTimeout(() => {
-        list.innerHTML = '';
-        let achou = false;
+        resList.innerHTML = '';
+        let found = false;
         getDB().forEach(doc => {
-            if (doc.name.toLowerCase().includes(query) || doc.text.toLowerCase().includes(query) || doc.folder.toLowerCase().includes(query)) {
-                achou = true;
-                list.innerHTML += `
-                    <div class="result-item" style="background:white; border:1px solid #e2e8f0; border-radius:10px; padding:20px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                        <div><h4 style="margin:0 0 5px; font-size:1.1rem; color:#0f172a;">${doc.name}</h4><p style="margin:0; font-size:0.85rem; color:#64748b;"><i class="fa-solid fa-folder-open"></i> ${doc.folder} | Extrato: "${doc.text}"</p></div>
-                        <div style="background:#dcfce7; color:#166534; padding:5px 10px; border-radius:6px; font-weight:bold; font-size:0.8rem;">Match IA</div>
+            if (doc.name.toLowerCase().includes(q) || doc.text.toLowerCase().includes(q) || doc.folder.toLowerCase().includes(q)) {
+                found = true;
+                resList.innerHTML += `
+                    <div class="doc-row" style="margin-bottom: 10px;" onclick="openDocPreview('${doc.id}')">
+                        <div class="doc-icon text-primary"><i class="fa-solid fa-brain"></i></div>
+                        <div class="doc-info">
+                            <div class="doc-name">${doc.name}</div>
+                            <div class="doc-path">Match Encontrado em: ${doc.folder}</div>
+                        </div>
                     </div>`;
             }
         });
-        if (!achou) list.innerHTML = `<div style="padding:20px; text-align:center; color:#ef4444; border:1px solid #fca5a5; border-radius:8px;">Nenhum documento encontrado.</div>`;
-    }, 800);
-}
-
-// UI: Gráficos de Viabilidade e Fluxos
-function showFlow(id) {
-    document.querySelectorAll('.flow-diagram, .ft-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById(`flow-${id}`).classList.add('active');
-    if (event && event.currentTarget) event.currentTarget.classList.add('active');
-}
-
-function initChart() {
-    const ctx = document.getElementById('costChart');
-    if (!ctx || typeof Chart === 'undefined') return;
-    new Chart(ctx.getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: ['Gemini Flash', 'GPT mini', 'Gemini Pro', 'GPT-5.4', 'Syntex Estruturado'],
-            datasets: [{ label: 'Custo Mensal (R$)', data: [5.22, 11.13, 21.31, 37.12, 825.00], backgroundColor: ['#22c55e', '#94a3b8', '#3b82f6', '#64748b', '#ef4444'], borderRadius: 6 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
+        if (!found) resList.innerHTML = `<div style="color:#de350b; font-weight:600;">Sem resultados semânticos para esta query.</div>`;
+    }, 600);
 }
