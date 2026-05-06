@@ -48,7 +48,7 @@ class SiebotDatabase {
             date: new Date().toISOString().split('T')[0],
             user: "CF"
         };
-        
+
         currentDb.unshift(newDoc);
         try {
             localStorage.setItem(DB_NAME, JSON.stringify(currentDb));

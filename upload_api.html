@@ -1,91 +1,166 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Siebot AI | SharePoint Enterprise</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="assets/cs/style_upload.css"> 
+    <link rel="stylesheet" href="assets/cs/style_upload.css">
 </head>
+
 <body class="app-layout">
 
     <aside class="app-sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="assets/img/SIEBOT.png" alt="Siebot Logo" class="brand-logo">
+            <img src="assets/img/SIEBOT.png" alt="Logo" class="brand-logo">
             <button class="toggle-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
         </div>
-        
+
         <div class="user-profile">
             <div class="avatar">CF</div>
             <div class="user-info">
                 <strong>Camilli</strong>
-                <span>Acesso Administrativo</span>
+                <span>Administrador</span>
             </div>
         </div>
 
         <nav class="sidebar-menu">
             <p class="menu-label">Workspace</p>
-            <button class="menu-btn active" onclick="switchView('dashboard')"><i class="fa-solid fa-house"></i> <span>Dashboard</span></button>
-            <button class="menu-btn" onclick="switchView('upload')"><i class="fa-solid fa-cloud-arrow-up"></i> <span>Ingestão IA</span></button>
-            <button class="menu-btn" onclick="switchView('search')"><i class="fa-solid fa-magnifying-glass"></i> <span>Busca Neural</span></button>
-            
-            <p class="menu-label mt-4">Estratégia</p>
-            <button class="menu-btn highlight-btn" onclick="switchView('pricing')"><i class="fa-solid fa-chart-line"></i> <span>Viabilidade & Fluxos</span></button>
+            <button class="menu-btn active" onclick="switchView('dashboard')"><i class="fa-solid fa-layer-group"></i>
+                <span>Dashboard</span></button>
+            <button class="menu-btn" onclick="switchView('upload')"><i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Upload Inteligente</span></button>
+            <button class="menu-btn" onclick="switchView('search')"><i class="fa-solid fa-magnifying-glass"></i>
+                <span>Busca IA</span></button>
+
+            <p class="menu-label mt-4">Apresentação CEO</p>
+            <button class="menu-btn highlight-btn" onclick="switchView('pricing')"><i class="fa-solid fa-chart-pie"></i>
+                <span>Viabilidade & Fluxos</span></button>
         </nav>
-        <a href="index.html" class="back-to-hub"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Sair</span></a>
+
+        <a href="index.html" class="back-to-hub"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Voltar ao
+                Hub</span></a>
     </aside>
 
     <main class="app-content">
+
         <section id="view-dashboard" class="view-panel active">
             <div class="panel-header">
-                <h2><i class="fa-solid fa-layer-group text-primary"></i> Visão Geral</h2>
-                <p>Acompanhe os últimos documentos processados pela inteligência artificial.</p>
-            </div>
-            
-            <div class="dashboard-stats">
-                <div class="stat-card"><h3>1.100</h3><p>Docs/Mês Estimados</p></div>
-                <div class="stat-card highlight"><h3>1.6M</h3><p>Tokens Processados</p></div>
-                <div class="stat-card"><h3>99%</h3><p>Precisão Cognitiva</p></div>
+                <h2><i class="fa-solid fa-layer-group text-primary"></i> Dashboard de Governança</h2>
+                <p>Acompanhe os últimos documentos processados e indexados pela Inteligência Artificial.</p>
             </div>
 
-            <h3 class="section-title mt-4">Últimos Uploads</h3>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>1.100</h3>
+                    <p>Docs/Mês Estimados</p>
+                </div>
+                <div class="stat-card highlight">
+                    <h3>1.6M</h3>
+                    <p>Tokens de Leitura</p>
+                </div>
+                <div class="stat-card">
+                    <h3>99%</h3>
+                    <p>Precisão de Roteamento</p>
+                </div>
+            </div>
+
+            <h3 class="section-title mt-4">Últimos Uploads Realizados</h3>
             <div class="table-container">
                 <table class="modern-table">
-                    <thead><tr><th>Usuário</th><th>Documento</th><th>Departamento</th><th>Pasta SharePoint</th><th>Data</th></tr></thead>
-                    <tbody id="recent-docs-list"></tbody>
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Documento</th>
+                            <th>Departamento</th>
+                            <th>Pasta SharePoint</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-docs-list">
+                    </tbody>
                 </table>
             </div>
         </section>
 
         <section id="view-upload" class="view-panel">
-            <div class="panel-header"><h2><i class="fa-solid fa-microchip text-primary"></i> Motor de Indexação</h2></div>
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-microchip text-primary"></i> Motor de Indexação (Upload)</h2>
+                <p>Arraste arquivos. O motor inferirá metadados e estruturará no SharePoint Graph API.</p>
+            </div>
+
             <div id="step-upload" class="step-card active">
+                <div class="context-bar">
+                    <label>Direcionamento (Opcional):</label>
+                    <select id="ai-hint" class="input-modern">
+                        <option value="auto">Detecção 100% Automática</option>
+                        <option value="rh">Recursos Humanos</option>
+                        <option value="fin">Financeiro</option>
+                        <option value="jur">Jurídico</option>
+                        <option value="log">Logística</option>
+                    </select>
+                </div>
+
                 <div class="drop-area" id="drop-zone">
                     <i class="fa-solid fa-file-arrow-up drop-icon"></i>
-                    <h3>Arraste o documento aqui</h3>
+                    <h3>Arraste o documento corporativo aqui</h3>
                     <input type="file" id="file-input" hidden>
-                    <button type="button" class="btn-primary mt-3" onclick="document.getElementById('file-input').click()">Procurar</button>
+                    <button type="button" class="btn-primary mt-3"
+                        onclick="document.getElementById('file-input').click()">Procurar Arquivo</button>
                 </div>
             </div>
-            <div id="step-processing" class="step-card"><div class="terminal-box"><div class="term-body" id="ai-logs"></div></div></div>
+
+            <div id="step-processing" class="step-card">
+                <div class="terminal-box">
+                    <div class="term-header">
+                        <div class="mac-btns"><span class="r"></span><span class="y"></span><span class="g"></span>
+                        </div>Siebot AI | Processamento Ativo
+                    </div>
+                    <div class="term-body" id="ai-logs"></div>
+                </div>
+            </div>
+
             <div id="step-results" class="step-card">
-                <input type="text" id="meta-filename" class="input-modern bold-text">
-                <input type="text" id="meta-folder" class="input-modern" readonly>
-                <input type="text" id="meta-category" class="input-modern" readonly>
-                <div class="tags-wrapper" id="meta-tags"></div>
+                <div class="result-header">
+                    <div class="score-badge" id="ai-score">98%</div>
+                    <div>
+                        <h3 style="margin:0; color:#166534;">Análise Concluída</h3>
+                        <p style="margin:0; font-size:0.85rem;">Pronto para envio.</p>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group col-12"><label>Nome Padronizado</label><input type="text" id="meta-filename"
+                            class="input-modern bold-text"></div>
+                    <div class="form-group col-6"><label>Pasta Destino (SharePoint)</label><input type="text"
+                            id="meta-folder" class="input-modern" readonly></div>
+                    <div class="form-group col-6"><label>Categoria</label><input type="text" id="meta-category"
+                            class="input-modern" readonly></div>
+                    <div class="form-group col-12"><label>Tags Extraídas</label>
+                        <div class="tags-wrapper" id="meta-tags"></div>
+                    </div>
+                </div>
                 <div class="actions-footer">
-                    <button class="btn-primary" id="btn-submit" onclick="syncSharePoint()"><i class="fa-brands fa-microsoft"></i> Sincronizar via Graph API</button>
+                    <button class="btn-ghost" onclick="resetUpload()">Descartar</button>
+                    <button class="btn-primary" id="btn-submit" onclick="syncSharePoint()"><i
+                            class="fa-brands fa-microsoft"></i> Salvar no SharePoint</button>
                 </div>
             </div>
         </section>
 
         <section id="view-search" class="view-panel">
-            <div class="panel-header"><h2><i class="fa-solid fa-brain text-primary"></i> Busca Semântica</h2></div>
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-brain text-primary"></i> Busca Semântica</h2>
+            </div>
             <div class="search-container">
                 <div class="search-box">
-                    <input type="text" id="ai-search-input" class="input-modern" placeholder="Ex: Contratos de aluguel de 2026...">
-                    <button class="btn-primary" onclick="runSearch()"><i class="fa-solid fa-sparkles"></i></button>
+                    <input type="text" id="ai-search-input" class="input-modern"
+                        placeholder="Pesquise por contexto. Ex: Contratos de 2026...">
+                    <button class="btn-primary" onclick="runSearch()"><i class="fa-solid fa-sparkles"></i>
+                        Buscar</button>
                 </div>
                 <div id="search-results-list" class="results-list mt-4"></div>
             </div>
@@ -93,68 +168,332 @@
 
         <section id="view-pricing" class="view-panel">
             <div class="panel-header">
-                <h2><i class="fa-solid fa-chart-pie text-primary"></i> Viabilidade & Arquitetura de Software</h2>
-                <p>Comparativo de custo x benefício e diagramas de fluxo de dados (1.100 docs/mês).</p>
+                <h2><i class="fa-solid fa-chart-pie text-primary"></i> Viabilidade do Projeto & Arquitetura</h2>
+                <p>Comparativo de custo x benefício e diagramas detalhados (Base: 1.100 docs / 3.300 páginas mensais).
+                </p>
             </div>
 
             <div class="pricing-grid">
                 <div class="chart-container"><canvas id="costChart"></canvas></div>
+
                 <div class="cost-cards">
-                    <h3 class="section-title">Modelos de IA (Custo por Mês)</h3>
-                    <div class="price-card winner"><div class="pc-header">Gemini 2.5 Flash <span>Escolhido</span></div><div class="pc-price">~R$ 5,22</div></div>
-                    <div class="price-card"><div class="pc-header">GPT-5.4 mini</div><div class="pc-price">~R$ 11,13</div></div>
-                    <div class="price-card"><div class="pc-header">Gemini 2.5 Pro</div><div class="pc-price">~R$ 21,31</div></div>
-                    <div class="price-card"><div class="pc-header">GPT-5.4</div><div class="pc-price">~R$ 37,12</div></div>
-                    
-                    <h3 class="section-title mt-4">Microsoft Syntex (Alternativa Nativa)</h3>
-                    <div class="price-card loser"><div class="pc-header">Estruturado / Livre</div><div class="pc-price">~R$ 825,00</div><div class="pc-sub">US$ 0,05 por página</div></div>
-                    <div class="price-card"><div class="pc-header">Pré-criado</div><div class="pc-price">~R$ 165,00</div></div>
-                    <div class="price-card"><div class="pc-header">Não Estruturado</div><div class="pc-price">~R$ 82,50</div></div>
+                    <h3 class="section-title">Nossa API Própria (Mensal)</h3>
+                    <div class="price-card winner">
+                        <div class="pc-header">Gemini 2.5 Flash <span>O Escolhido</span></div>
+                        <div class="pc-price">~R$ 5,22</div>
+                    </div>
+                    <div class="price-card">
+                        <div class="pc-header">GPT-5.4 mini</div>
+                        <div class="pc-price">~R$ 11,13</div>
+                    </div>
+                    <div class="price-card">
+                        <div class="pc-header">Gemini 2.5 Pro</div>
+                        <div class="pc-price">~R$ 21,31</div>
+                    </div>
+                    <div class="price-card">
+                        <div class="pc-header">GPT-5.4</div>
+                        <div class="pc-price">~R$ 37,12</div>
+                    </div>
+
+                    <h3 class="section-title mt-4">Microsoft Syntex (Alternativa)</h3>
+                    <div class="price-card loser">
+                        <div class="pc-header">Syntex Estruturado / Livre</div>
+                        <div class="pc-price">~R$ 825,00</div>
+                        <div class="pc-sub">US$ 0,05 por página</div>
+                    </div>
+                    <div class="price-card">
+                        <div class="pc-header">Syntex Pré-criado</div>
+                        <div class="pc-price">~R$ 165,00</div>
+                        <div class="pc-sub">US$ 0,01 por página</div>
+                    </div>
+                    <div class="price-card">
+                        <div class="pc-header">Syntex Não Estruturado</div>
+                        <div class="pc-price">~R$ 82,50</div>
+                        <div class="pc-sub">US$ 0,005 por página</div>
+                    </div>
                 </div>
             </div>
 
             <h3 class="section-title mt-5 mb-3">Diagramas de Arquitetura</h3>
             <div class="flow-tabs">
-                <button class="ft-btn active" onclick="showFlow('api')">Arquitetura Vencedora (100% Back-End)</button>
-                <button class="ft-btn" onclick="showFlow('automate')">Cenário Descartado (Power Automate)</button>
+                <button class="ft-btn active" onclick="showFlow('api')">Proposta: Fluxo API Própria</button>
+                <button class="ft-btn" onclick="showFlow('automate')">Cenário: Power Automate</button>
+                <button class="ft-btn" onclick="showFlow('syntex')">Cenário: MS Syntex</button>
             </div>
 
             <div id="flow-api" class="flow-diagram active">
-                <div class="flow-info">
-                    <h4>Por que escolhemos essa?</h4>
-                    <p>Total controle da regra de negócio, velocidade insana, eliminação de dependências de ferramentas Low-Code (Power Automate) e o menor custo possível conectando direto via Graph API.</p>
-                </div>
+                <div class="flow-desc"><strong>Vantagem:</strong> Centraliza a regra de negócio, altíssima velocidade e
+                    elimina dependências de Low-Code. Custo absurdamente menor.</div>
                 <div class="flow-track">
-                    <div class="flow-step"><i class="fa-solid fa-user"></i> Usuário</div>
+                    <div class="flow-step"><i class="fa-solid fa-user"></i> Usuário<br><small>Upload</small></div>
                     <div class="flow-arrow arrow-anim"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-solid fa-server"></i> Back-End <br><small>App Web</small></div>
-                    <div class="flow-arrow arrow-anim"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
-                    <div class="flow-step highlight-step pulse-anim"><i class="fa-solid fa-microchip"></i> API IA <br><small>Gemini Flash</small></div>
+                    <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Envia Leitura</small>
+                    </div>
+                    <div class="flow-arrow arrow-anim"><i class="fa-solid fa-arrows-turn-right"></i> JSON <i
+                            class="fa-solid fa-arrows-turn-left"></i></div>
+                    <div class="flow-step highlight-step pulse-anim"><i class="fa-solid fa-microchip"></i> API
+                        IA<br><small>Gemini / GPT</small></div>
                     <div class="flow-arrow arrow-anim"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-brands fa-microsoft"></i> SharePoint <br><small>Graph API</small></div>
+                    <div class="flow-step"><i class="fa-brands fa-microsoft"></i> SharePoint<br><small>Salva c/
+                            Metadados</small></div>
                 </div>
             </div>
 
             <div id="flow-automate" class="flow-diagram">
-                <div class="flow-info">
-                    <h4>Por que descartamos?</h4>
-                    <p>O uso de gatilhos em pastas ocultas no SharePoint para acionar o Automate gera lentidão, gargalos de fila e custos adicionais desnecessários, perdendo a robustez de um sistema focado em código.</p>
-                </div>
+                <div class="flow-desc" style="border-color:#ef4444;"><strong>Desvantagem:</strong> Gatilhos do Automate
+                    são lentos, criam gargalos de fila e necessitam de pastas de transição (Dropzone).</div>
                 <div class="flow-track">
-                    <div class="flow-step"><i class="fa-solid fa-server"></i> Back-End</div>
+                    <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Upload Dropzone</small>
+                    </div>
                     <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-regular fa-folder"></i> Dropzone <br><small>SharePoint</small></div>
-                    <div class="flow-arrow"><i class="fa-solid fa-bolt"></i></div>
-                    <div class="flow-step highlight-step-red"><i class="fa-solid fa-gears"></i> Automate <br><small>Gatilho Lento</small></div>
+                    <div class="flow-step"><i class="fa-regular fa-folder"></i> SharePoint<br><small>Dropzone</small>
+                    </div>
+                    <div class="flow-arrow"><i class="fa-solid fa-bolt" style="color:#eab308;"></i> Gatilho</div>
+                    <div class="flow-step highlight-step-red"><i class="fa-solid fa-gears"></i>
+                        Automate<br><small>Renomeia e Move</small></div>
                     <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-                    <div class="flow-step"><i class="fa-brands fa-microsoft"></i> Pasta Final</div>
+                    <div class="flow-step"><i class="fa-solid fa-folder-open"></i> Pasta Final</div>
+                </div>
+            </div>
+
+            <div id="flow-syntex" class="flow-diagram">
+                <div class="flow-desc" style="border-color:#ef4444;"><strong>Desvantagem:</strong> Custo altíssimo por
+                    página (até R$ 825/mês) e engessa o sistema dentro do ecossistema Microsoft.</div>
+                <div class="flow-track">
+                    <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Upload Cru</small></div>
+                    <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    <div class="flow-step"><i class="fa-brands fa-microsoft"></i> SharePoint<br><small>Salva e Aciona
+                            IA</small></div>
+                    <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    <div class="flow-step highlight-step-red"><i class="fa-solid fa-brain"></i> MS
+                        Syntex<br><small>Extrai Dados</small></div>
+                    <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                    <div class="flow-step"><i class="fa-solid fa-table-columns"></i>
+                        Colunas<br><small>Atualizadas</small></div>
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="assets/js/database.js"></script>
-    <script src="assets/js/siebot_brain.js"></script>
-    <script src="assets/js/upload_ai.js"></script>
+    <script>
+        // ==========================================
+        // 1. BANCO DE DADOS (10 Mocks + LocalStorage)
+        // ==========================================
+        const DB_KEY = 'SIEBOT_SHAREPOINT_DATA';
+        const MOCK_DATA = [
+            { id: 1, name: "CONTRATO_ALUGUEL_SEDE_2026.pdf", dept: "Jurídico", folder: "/Juridico/Contratos", text: "minuta do contrato de locação da sede assinado", date: "2026-05-01", user: "CF" },
+            { id: 2, name: "NF_COMPRA_COMPUTADORES_MAIO.xml", dept: "Financeiro", folder: "/Financeiro/Notas", text: "nota fiscal eletrônica equipamentos ti faturado", date: "2026-05-02", user: "TS" },
+            { id: 3, name: "CV_ANALISTA_SISTEMAS_JOAO.pdf", dept: "Recursos Humanos", folder: "/RH/Admissoes", text: "currículo experiência desenvolvimento javascript", date: "2026-05-03", user: "CF" },
+            { id: 4, name: "ROMANEIO_CARGA_SP_RJ.pdf", dept: "Logística", folder: "/Logistica/Operacao", text: "romaneio de carga transporte mercadorias são paulo", date: "2026-05-04", user: "TS" },
+            { id: 5, name: "ADITIVO_FORNECEDOR_X.docx", dept: "Jurídico", folder: "/Juridico/Aditivos", text: "termo aditivo ao contrato de prestação de serviços", date: "2026-05-04", user: "CF" },
+            { id: 6, name: "RELATORIO_AUDITORIA_Q1.pdf", dept: "Financeiro", folder: "/Financeiro/Auditoria", text: "relatório de auditoria interna primeiro trimestre", date: "2026-05-05", user: "CF" },
+            { id: 7, name: "COMPROVANTE_LUZ_ABRIL.pdf", dept: "Financeiro", folder: "/Financeiro/Pagamentos", text: "comprovante de pagamento de energia elétrica copel", date: "2026-05-05", user: "TS" },
+            { id: 8, name: "FOLHA_PAGAMENTO_ABRIL.xlsx", dept: "Recursos Humanos", folder: "/RH/Fechamento", text: "planilha de fechamento da folha de pagamento colaboradores", date: "2026-05-06", user: "CF" },
+            { id: 9, name: "PROCURACAO_REPRESENTACAO.pdf", dept: "Jurídico", folder: "/Juridico/Procuracoes", text: "procuração pública para representação legal da empresa", date: "2026-05-06", user: "TS" },
+            { id: 10, name: "CTE_TRANSPORTE_SUL.xml", dept: "Logística", folder: "/Logistica/CTE", text: "conhecimento de transporte eletrônico carga região sul", date: "2026-05-06", user: "CF" }
+        ];
+
+        function getDB() {
+            let data = localStorage.getItem(DB_KEY);
+            if (!data) {
+                localStorage.setItem(DB_KEY, JSON.stringify(MOCK_DATA));
+                return MOCK_DATA;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveToDB(doc) {
+            let db = getDB();
+            db.unshift({
+                id: Date.now(),
+                name: doc.suggestedName,
+                dept: doc.department,
+                folder: doc.folder,
+                text: `Documento indexado via IA. Tags: ${doc.tags.join(' ')}`,
+                date: new Date().toISOString().split('T')[0],
+                user: "CF"
+            });
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+        }
+
+        // ==========================================
+        // 2. MOTOR DE IA (CÉREBRO)
+        // ==========================================
+        const KNOWLEDGE_BASE = {
+            rh: { nome: "Recursos Humanos", pasta: "/SharePoint/RH/Documentacao", keywords: ['curriculo', 'cv', 'admissao', 'folha', 'ferias'], tags: ['Confidencial', 'RH'] },
+            fin: { nome: "Financeiro", pasta: "/SharePoint/Financeiro/Notas", keywords: ['nota', 'fiscal', 'fatura', 'boleto', 'comprovante'], tags: ['Auditoria', 'Financeiro'] },
+            jur: { nome: "Jurídico", pasta: "/SharePoint/Juridico/Contratos", keywords: ['contrato', 'distrato', 'minuta', 'procuracao', 'aditivo'], tags: ['Legal', 'Contratos'] },
+            log: { nome: "Logística", pasta: "/SharePoint/Logistica/Operacao", keywords: ['romaneio', 'cte', 'frete', 'entrega', 'carga'], tags: ['Operacional', 'Logística'] }
+        };
+
+        async function analyzeFileContent(file, hint, logCallback) {
+            const text = file.name.toLowerCase();
+            let bestMatch = null;
+            let maxScore = 0;
+
+            logCallback(`[SYSTEM] Recebendo arquivo: ${file.name}`);
+            await new Promise(r => setTimeout(r, 600));
+            logCallback(`[AI CORE] Iniciando vetorização semântica (1.500 tokens estimados)...`);
+            await new Promise(r => setTimeout(r, 800));
+
+            for (const [id, data] of Object.entries(KNOWLEDGE_BASE)) {
+                let score = hint === id ? 3 : 0;
+                if (hint === id) logCallback(`[BIAS] Direcionamento cognitivo aplicado: ${data.nome}`, true);
+
+                data.keywords.forEach(kw => { if (text.includes(kw)) score += 1; });
+                if (score > maxScore) { maxScore = score; bestMatch = { id, ...data }; }
+            }
+
+            await new Promise(r => setTimeout(r, 900));
+
+            if (!bestMatch) {
+                logCallback("[WARN] Baixa similaridade. Classificação genérica aplicada.", false);
+                return { department: "Não Classificado", folder: "/SharePoint/Geral/Triagem", suggestedName: `DOC_${Date.now()}`, tags: ['Revisão Manual'], confidence: 55.4 };
+            }
+
+            let conf = Math.min(99.9, (maxScore * 15) + 60 + Math.random() * 5).toFixed(1);
+            logCallback(`[MATCH] Padrão reconhecido. Categoria: ${bestMatch.nome} (${conf}%)`, true);
+            await new Promise(r => setTimeout(r, 600));
+            logCallback(`[SHAREPOINT] Preparando metadados para Graph API...`);
+
+            const ext = file.name.split('.').pop();
+            const cleanName = file.name.replace('.' + ext, '').substring(0, 15).replace(/\W/g, '_').toUpperCase();
+
+            return {
+                department: bestMatch.nome, folder: bestMatch.pasta,
+                suggestedName: `${bestMatch.id.toUpperCase()}_${new Date().toISOString().split('T')[0].replace(/-/g, '')}_${cleanName}_V1.${ext}`,
+                tags: [...bestMatch.tags, 'Indexado via IA'], confidence: conf
+            };
+        }
+
+        // ==========================================
+        // 3. CONTROLE DA INTERFACE (UI)
+        // ==========================================
+        let currentUploadData = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+            initUploader();
+            initChart();
+            document.getElementById('ai-search-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') runSearch(); });
+        });
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-panel, .menu-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+            if (viewId === 'dashboard') loadDashboard();
+        }
+
+        function loadDashboard() {
+            const tbody = document.getElementById('recent-docs-list');
+            tbody.innerHTML = '';
+            getDB().slice(0, 10).forEach(doc => {
+                const icon = doc.name.includes('.pdf') ? 'fa-file-pdf text-danger' : (doc.name.includes('.xml') ? 'fa-file-code text-warning' : 'fa-file-word text-primary');
+                tbody.innerHTML += `
+                    <tr>
+                        <td><div class="avatar-sm">${doc.user}</div></td>
+                        <td><strong><i class="fa-solid ${icon}"></i> ${doc.name}</strong></td>
+                        <td><span class="dept-badge">${doc.dept}</span></td>
+                        <td><code class="folder-path">${doc.folder}</code></td>
+                        <td>${doc.date}</td>
+                    </tr>`;
+            });
+        }
+
+        function initUploader() {
+            const dz = document.getElementById('drop-zone');
+            const fi = document.getElementById('file-input');
+            fi.addEventListener('change', e => { if (e.target.files.length) processFile(e.target.files[0]); });
+            ['dragover', 'drop', 'dragenter', 'dragleave'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }));
+            dz.addEventListener('dragover', () => dz.classList.add('dragover'));
+            dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+            dz.addEventListener('drop', e => { dz.classList.remove('dragover'); if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]); });
+        }
+
+        async function processFile(file) {
+            document.querySelectorAll('#view-upload .step-card').forEach(el => el.classList.remove('active'));
+            document.getElementById('step-processing').classList.add('active');
+
+            const term = document.getElementById('ai-logs'); term.innerHTML = '';
+            const print = (txt, hl = false) => { term.innerHTML += `<div class="log-line ${hl ? 'log-hl' : ''}"><span>[${new Date().toLocaleTimeString()}]</span> ${txt}</div>`; term.scrollTop = term.scrollHeight; };
+
+            const res = await analyzeFileContent(file, document.getElementById('ai-hint').value, print);
+            await new Promise(r => setTimeout(r, 1000));
+
+            currentUploadData = res;
+            document.getElementById('ai-score').innerText = `${Math.round(res.confidence)}%`;
+            document.getElementById('meta-filename').value = res.suggestedName;
+            document.getElementById('meta-folder').value = res.folder;
+            document.getElementById('meta-category').value = res.department;
+
+            const tagsDiv = document.getElementById('meta-tags'); tagsDiv.innerHTML = '';
+            res.tags.forEach(t => tagsDiv.innerHTML += `<span class="tag-pill"><i class="fa-solid fa-tag"></i> ${t}</span>`);
+
+            document.getElementById('step-processing').classList.remove('active');
+            document.getElementById('step-results').classList.add('active');
+        }
+
+        function syncSharePoint() {
+            const btn = document.getElementById('btn-submit');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+            setTimeout(() => {
+                if (currentUploadData) saveToDB(currentUploadData);
+                alert("Salvo com sucesso!");
+                resetUpload();
+                btn.innerHTML = orig;
+            }, 1000);
+        }
+
+        function resetUpload() {
+            document.getElementById('file-input').value = ''; currentUploadData = null;
+            document.querySelectorAll('#view-upload .step-card').forEach(el => el.classList.remove('active'));
+            document.getElementById('step-upload').classList.add('active');
+        }
+
+        function runSearch() {
+            const query = document.getElementById('ai-search-input').value.toLowerCase();
+            const list = document.getElementById('search-results-list');
+            if (!query) return;
+            list.innerHTML = `<div style="padding:20px; text-align:center; color:#64748b;"><i class="fa-solid fa-circle-notch fa-spin"></i> Varrendo banco local...</div>`;
+
+            setTimeout(() => {
+                list.innerHTML = '';
+                let achou = false;
+                getDB().forEach(doc => {
+                    if (doc.name.toLowerCase().includes(query) || doc.text.toLowerCase().includes(query) || doc.folder.toLowerCase().includes(query)) {
+                        achou = true;
+                        list.innerHTML += `
+                            <div class="result-item" style="background:white; border:1px solid #e2e8f0; border-radius:10px; padding:20px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                                <div><h4 style="margin:0 0 5px; font-size:1.1rem; color:#0f172a;">${doc.name}</h4><p style="margin:0; font-size:0.85rem; color:#64748b;"><i class="fa-solid fa-folder-open"></i> ${doc.folder} | Extrato: "${doc.text}"</p></div>
+                                <div style="background:#dcfce7; color:#166534; padding:5px 10px; border-radius:6px; font-weight:bold; font-size:0.8rem;">Match IA</div>
+                            </div>`;
+                    }
+                });
+                if (!achou) list.innerHTML = `<div style="padding:20px; text-align:center; color:#ef4444; border:1px solid #fca5a5; border-radius:8px;">Nenhum documento encontrado.</div>`;
+            }, 800);
+        }
+
+        function showFlow(id) {
+            document.querySelectorAll('.flow-diagram, .ft-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`flow-${id}`).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function initChart() {
+            new Chart(document.getElementById('costChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Gemini Flash', 'GPT mini', 'Gemini Pro', 'GPT-5.4', 'Syntex Estruturado'],
+                    datasets: [{ label: 'Custo Mensal (R$)', data: [5.22, 11.13, 21.31, 37.12, 825.00], backgroundColor: ['#22c55e', '#94a3b8', '#3b82f6', '#64748b', '#ef4444'], borderRadius: 6 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+    </script>
 </body>
+
 </html>
