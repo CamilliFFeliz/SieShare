@@ -1,218 +1,239 @@
-let currentAiData = null;
+/**
+ * ----------------------------------------------------
+ * 1. DATABASE (LOCALSTORAGE MOCK)
+ * ----------------------------------------------------
+ */
+const DB_KEY = 'SIEBOT_SHAREPOINT_DATA';
+const INITIAL_MOCK_DATA = [
+    { id: 1, name: "CONTRATO_ALUGUEL_SEDE_2026.pdf", dept: "Jurídico", folder: "/Juridico/Contratos", text: "minuta do contrato de locação da sede assinado", date: "2026-05-01", user: "CF" },
+    { id: 2, name: "NF_COMPRA_COMPUTADORES_MAIO.xml", dept: "Financeiro", folder: "/Financeiro/Notas", text: "nota fiscal eletrônica equipamentos ti faturado", date: "2026-05-02", user: "TS" },
+    { id: 3, name: "CV_ANALISTA_SISTEMAS_JOAO.pdf", dept: "Recursos Humanos", folder: "/RH/Admissoes", text: "currículo experiência desenvolvimento javascript", date: "2026-05-03", user: "CF" },
+    { id: 4, name: "ROMANEIO_CARGA_SP_RJ.pdf", dept: "Logística", folder: "/Logistica/Operacao", text: "romaneio de carga transporte mercadorias são paulo", date: "2026-05-04", user: "TS" },
+    { id: 5, name: "ADITIVO_FORNECEDOR_X.docx", dept: "Jurídico", folder: "/Juridico/Aditivos", text: "termo aditivo ao contrato de prestação de serviços", date: "2026-05-04", user: "CF" },
+    { id: 6, name: "RELATORIO_AUDITORIA_Q1.pdf", dept: "Financeiro", folder: "/Financeiro/Auditoria", text: "relatório de auditoria interna primeiro trimestre", date: "2026-05-05", user: "CF" },
+    { id: 7, name: "COMPROVANTE_LUZ_ABRIL.pdf", dept: "Financeiro", folder: "/Financeiro/Pagamentos", text: "comprovante de pagamento de energia elétrica copel", date: "2026-05-05", user: "TS" },
+    { id: 8, name: "FOLHA_PAGAMENTO_ABRIL.xlsx", dept: "Recursos Humanos", folder: "/RH/Fechamento", text: "planilha de fechamento da folha de pagamento colaboradores", date: "2026-05-06", user: "CF" },
+    { id: 9, name: "PROCURACAO_REPRESENTACAO.pdf", dept: "Jurídico", folder: "/Juridico/Procuracoes", text: "procuração pública para representação legal da empresa", date: "2026-05-06", user: "TS" },
+    { id: 10, name: "CTE_TRANSPORTE_SUL.xml", dept: "Logística", folder: "/Logistica/CTE", text: "conhecimento de transporte eletrônico carga região sul", date: "2026-05-06", user: "CF" }
+];
+
+function getDB() {
+    let data = localStorage.getItem(DB_KEY);
+    if (!data) {
+        localStorage.setItem(DB_KEY, JSON.stringify(INITIAL_MOCK_DATA));
+        return INITIAL_MOCK_DATA;
+    }
+    return JSON.parse(data);
+}
+
+function saveToDB(docData) {
+    let db = getDB();
+    db.unshift({
+        id: Date.now(),
+        name: docData.suggestedName,
+        dept: docData.department,
+        folder: docData.folder,
+        text: `Documento indexado via IA. Tags: ${docData.tags.join(' ')}`,
+        date: new Date().toISOString().split('T')[0],
+        user: "CF"
+    });
+    localStorage.setItem(DB_KEY, JSON.stringify(db));
+}
+
+/**
+ * ----------------------------------------------------
+ * 2. CÉREBRO DA IA (MOCK NLP)
+ * ----------------------------------------------------
+ */
+const KNOWLEDGE_BASE = {
+    rh: { nome: "Recursos Humanos", pasta: "/SharePoint/RH/Documentacao", keywords: ['curriculo', 'cv', 'admissao', 'folha', 'ferias'], tags: ['Confidencial', 'RH'] },
+    fin: { nome: "Financeiro", pasta: "/SharePoint/Financeiro/Notas", keywords: ['nota', 'fiscal', 'fatura', 'boleto', 'comprovante'], tags: ['Auditoria', 'Financeiro'] },
+    jur: { nome: "Jurídico", pasta: "/SharePoint/Juridico/Contratos", keywords: ['contrato', 'distrato', 'minuta', 'procuracao', 'aditivo'], tags: ['Legal', 'Contratos'] },
+    log: { nome: "Logística", pasta: "/SharePoint/Logistica/Operacao", keywords: ['romaneio', 'cte', 'frete', 'entrega', 'carga'], tags: ['Operacional', 'Logística'] }
+};
+
+async function analyzeFileContent(file, hint, logCallback) {
+    const text = file.name.toLowerCase();
+    let bestMatch = null;
+    let maxScore = 0;
+
+    logCallback(`[SYSTEM] Recebendo arquivo: ${file.name}`);
+    await new Promise(r => setTimeout(r, 600));
+    logCallback(`[AI CORE] Iniciando vetorização semântica (1.500 tokens estimados)...`);
+    await new Promise(r => setTimeout(r, 800));
+
+    for (const [id, data] of Object.entries(KNOWLEDGE_BASE)) {
+        let score = hint === id ? 3 : 0;
+        if (hint === id) logCallback(`[BIAS] Direcionamento cognitivo aplicado: ${data.nome}`, true);
+
+        data.keywords.forEach(kw => { if (text.includes(kw)) score += 1; });
+        if (score > maxScore) { maxScore = score; bestMatch = { id, ...data }; }
+    }
+
+    await new Promise(r => setTimeout(r, 900));
+
+    if (!bestMatch) {
+        logCallback("[WARN] Baixa similaridade. Classificação genérica aplicada.", false);
+        return { department: "Não Classificado", folder: "/SharePoint/Geral/Triagem", suggestedName: `DOC_${Date.now()}`, tags: ['Revisão Manual'], confidence: 55.4 };
+    }
+
+    let conf = Math.min(99.9, (maxScore * 15) + 60 + Math.random() * 5).toFixed(1);
+    logCallback(`[MATCH] Padrão reconhecido. Categoria: ${bestMatch.nome} (${conf}%)`, true);
+    await new Promise(r => setTimeout(r, 600));
+    logCallback(`[SHAREPOINT] Preparando metadados para Graph API...`);
+
+    const ext = file.name.split('.').pop();
+    const cleanName = file.name.replace('.' + ext, '').substring(0, 15).replace(/\W/g, '_').toUpperCase();
+
+    return {
+        department: bestMatch.nome, folder: bestMatch.pasta,
+        suggestedName: `${bestMatch.id.toUpperCase()}_${new Date().toISOString().split('T')[0].replace(/-/g, '')}_${cleanName}_V1.${ext}`,
+        tags: [...bestMatch.tags, 'Indexado via IA'], confidence: conf
+    };
+}
+
+/**
+ * ----------------------------------------------------
+ * 3. CONTROLE DA INTERFACE E EVENTOS
+ * ----------------------------------------------------
+ */
+let currentUploadData = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Validação de segurança: Só executa se os elementos existirem na tela
-    if (document.getElementById('recent-docs-list')) loadDashboardTable();
-    if (document.getElementById('drop-zone')) initUploader();
-    if (document.getElementById('costChart')) initPricingChart();
-
+    loadDashboard();
+    initUploader();
+    initChart();
     const searchInput = document.getElementById('ai-search-input');
     if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') runSearch();
-        });
+        searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') runSearch(); });
     }
 });
 
-// ==========================================
-// MENU E NAVEGAÇÃO
-// ==========================================
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('collapsed');
-}
+// UI: Sidebar
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
 
+// UI: Abas
 function switchView(viewId) {
-    document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.menu-btn').forEach(el => el.classList.remove('active'));
-
-    const targetView = document.getElementById(`view-${viewId}`);
-    if (targetView) targetView.classList.add('active');
-
+    document.querySelectorAll('.view-panel, .menu-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`view-${viewId}`).classList.add('active');
     if (event && event.currentTarget) event.currentTarget.classList.add('active');
-    if (viewId === 'dashboard') loadDashboardTable();
+    if (viewId === 'dashboard') loadDashboard();
 }
 
-function showStep(stepId) {
-    document.querySelectorAll('#view-upload .step-card').forEach(el => el.classList.remove('active'));
-    const targetStep = document.getElementById(stepId);
-    if (targetStep) targetStep.classList.add('active');
-}
-
-// ==========================================
-// DASHBOARD (CONECTADO AO BANCO LOCAL)
-// ==========================================
-function loadDashboardTable() {
-    const tableBody = document.getElementById('recent-docs-list');
-    if (!tableBody) return;
-
-    tableBody.innerHTML = '';
-    const docs = typeof siebotDbInstance !== 'undefined' ? siebotDbInstance.getAllDocuments() : [];
-
-    docs.slice(0, 10).forEach(doc => {
-        const icon = doc.name.includes('.pdf') ? 'fa-file-pdf text-danger' : 'fa-file-excel text-success';
-        tableBody.innerHTML += `
+// UI: Carrega Dashboard
+function loadDashboard() {
+    const tbody = document.getElementById('recent-docs-list');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    getDB().slice(0, 10).forEach(doc => {
+        const icon = doc.name.includes('.pdf') ? 'fa-file-pdf text-danger' : (doc.name.includes('.xml') ? 'fa-file-code text-warning' : 'fa-file-word text-primary');
+        tbody.innerHTML += `
             <tr>
-                <td><div class="avatar-sm">${doc.user || 'AI'}</div></td>
+                <td><div class="avatar-sm">${doc.user}</div></td>
                 <td><strong><i class="fa-solid ${icon}"></i> ${doc.name}</strong></td>
                 <td><span class="dept-badge">${doc.dept}</span></td>
-                <td><code class="folder-path"><i class="fa-solid fa-folder-open"></i> ${doc.folder}</code></td>
+                <td><code class="folder-path">${doc.folder}</code></td>
                 <td>${doc.date}</td>
-            </tr>
-        `;
+            </tr>`;
     });
 }
 
-// ==========================================
-// MOTOR DE UPLOAD
-// ==========================================
+// UI: Inicializa Upload e Drag & Drop
 function initUploader() {
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
+    const dz = document.getElementById('drop-zone');
+    const fi = document.getElementById('file-input');
+    if (!dz || !fi) return;
 
-    if (!dropZone || !fileInput) return;
-
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) handleAiProcessing(e.target.files[0]);
-    });
-
-    ['dragover', 'drop', 'dragenter', 'dragleave'].forEach(e => dropZone.addEventListener(e, preventD, false));
-    function preventD(e) { e.preventDefault(); e.stopPropagation(); }
-
-    dropZone.addEventListener('dragover', () => dropZone.classList.add('dragover'));
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop', (e) => {
-        dropZone.classList.remove('dragover');
-        if (e.dataTransfer.files.length > 0) handleAiProcessing(e.dataTransfer.files[0]);
-    });
+    fi.addEventListener('change', e => { if (e.target.files.length) processFile(e.target.files[0]); });
+    ['dragover', 'drop', 'dragenter', 'dragleave'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }));
+    dz.addEventListener('dragover', () => dz.classList.add('dragover'));
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', e => { dz.classList.remove('dragover'); if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]); });
 }
 
-async function handleAiProcessing(file) {
-    showStep('step-processing');
-    const terminal = document.getElementById('ai-logs');
-    terminal.innerHTML = '';
-    currentAiData = null;
+// UI: Processa Arquivo e mostra no Terminal
+async function processFile(file) {
+    document.querySelectorAll('#view-upload .step-card').forEach(el => el.classList.remove('active'));
+    document.getElementById('step-processing').classList.add('active');
 
-    const printLog = (text, highlight = false) => {
-        const time = new Date().toLocaleTimeString('pt-BR');
-        terminal.innerHTML += `<div class="log-line ${highlight ? 'log-hl' : ''}"><span>[${time}]</span> ${text}</div>`;
-        terminal.scrollTop = terminal.scrollHeight;
-    };
+    const term = document.getElementById('ai-logs'); term.innerHTML = '';
+    const print = (txt, hl = false) => { term.innerHTML += `<div class="log-line ${hl ? 'log-hl' : ''}"><span>[${new Date().toLocaleTimeString()}]</span> ${txt}</div>`; term.scrollTop = term.scrollHeight; };
 
-    // Integração com o siebot_brain.js
-    if (typeof SiebotBrain !== 'undefined') {
-        const brain = new SiebotBrain();
-        const hintEl = document.getElementById('ai-hint');
-        const hint = hintEl ? hintEl.value : 'auto';
+    const res = await analyzeFileContent(file, document.getElementById('ai-hint').value, print);
+    await new Promise(r => setTimeout(r, 1000));
 
-        const result = await brain.analyzeDocument(file, hint, printLog);
+    currentUploadData = res;
+    document.getElementById('ai-score').innerText = `${Math.round(res.confidence)}%`;
+    document.getElementById('meta-filename').value = res.suggestedName;
+    document.getElementById('meta-folder').value = res.folder;
+    document.getElementById('meta-category').value = res.department;
 
-        if (result) {
-            currentAiData = result;
-            document.getElementById('meta-filename').value = result.suggestedName;
-            document.getElementById('meta-folder').value = result.folder;
-            document.getElementById('meta-category').value = result.department;
+    const tagsDiv = document.getElementById('meta-tags'); tagsDiv.innerHTML = '';
+    res.tags.forEach(t => tagsDiv.innerHTML += `<span class="tag-pill"><i class="fa-solid fa-tag"></i> ${t}</span>`);
 
-            const scoreEl = document.getElementById('ai-score');
-            if (scoreEl) scoreEl.innerText = `${Math.round(result.confidence)}%`;
-
-            const tagsBox = document.getElementById('meta-tags');
-            if (tagsBox) {
-                tagsBox.innerHTML = '';
-                result.tags.forEach(t => tagsBox.innerHTML += `<span class="tag-pill"><i class="fa-solid fa-tag"></i> ${t}</span>`);
-            }
-            showStep('step-results');
-        }
-    } else {
-        alert("Erro: Motor Neural (siebot_brain.js) não carregado.");
-    }
+    document.getElementById('step-processing').classList.remove('active');
+    document.getElementById('step-results').classList.add('active');
 }
 
+// UI: Salva no Banco e Finaliza
 function syncSharePoint() {
     const btn = document.getElementById('btn-submit');
-    const original = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> API Uploading...';
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizando...';
+    setTimeout(() => {
+        if (currentUploadData) saveToDB(currentUploadData);
+        alert("Upload salvo e indexado com sucesso!");
+        resetUpload();
+        btn.innerHTML = orig;
+    }, 1000);
+}
+
+function resetUpload() {
+    document.getElementById('file-input').value = ''; currentUploadData = null;
+    document.querySelectorAll('#view-upload .step-card').forEach(el => el.classList.remove('active'));
+    document.getElementById('step-upload').classList.add('active');
+}
+
+// UI: Busca
+function runSearch() {
+    const query = document.getElementById('ai-search-input').value.toLowerCase();
+    const list = document.getElementById('search-results-list');
+    if (!query) return;
+    list.innerHTML = `<div style="padding:20px; text-align:center; color:#64748b;"><i class="fa-solid fa-circle-notch fa-spin"></i> Varrendo banco vetorial local...</div>`;
 
     setTimeout(() => {
-        if (currentAiData && typeof siebotDbInstance !== 'undefined') {
-            siebotDbInstance.saveDocument(currentAiData);
-        }
-        alert("Upload via Microsoft Graph API concluído com sucesso!");
-
-        const fileInput = document.getElementById('file-input');
-        if (fileInput) fileInput.value = '';
-
-        showStep('step-upload');
-        btn.innerHTML = original;
-        loadDashboardTable(); // Atualiza a tabela na hora
-    }, 1200);
-}
-
-// ==========================================
-// BUSCA SEMÂNTICA
-// ==========================================
-async function runSearch() {
-    const query = document.getElementById('ai-search-input').value;
-    const list = document.getElementById('search-results-list');
-
-    if (!query) return;
-
-    list.innerHTML = `<div class="loading-state" style="padding:20px; text-align:center;"><i class="fa-solid fa-circle-notch fa-spin"></i> Varrendo banco vetorial local...</div>`;
-
-    if (typeof SiebotBrain !== 'undefined') {
-        const results = await new SiebotBrain().search(query);
         list.innerHTML = '';
-
-        if (results.length === 0) {
-            list.innerHTML = `<div class="error-state" style="padding:20px; text-align:center; border:1px solid #fca5a5; border-radius:8px; color:#ef4444;">Sem correspondências semânticas.</div>`;
-            return;
-        }
-
-        results.forEach(res => {
-            const icon = res.name.includes('.pdf') ? 'fa-file-pdf text-danger' : 'fa-file-word text-primary';
-            list.innerHTML += `
-                <div class="result-item" style="background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                    <div class="res-info">
-                        <h4 style="margin: 0 0 5px; font-size: 1.1rem;"><i class="fa-solid ${icon}"></i> ${res.name}</h4>
-                        <p style="margin: 0; color: #64748b; font-size: 0.9rem;"><i class="fa-solid fa-folder-open"></i> ${res.folder} | Match: ${res.matchPercent}%</p>
-                    </div>
-                </div>
-            `;
+        let achou = false;
+        getDB().forEach(doc => {
+            if (doc.name.toLowerCase().includes(query) || doc.text.toLowerCase().includes(query) || doc.folder.toLowerCase().includes(query)) {
+                achou = true;
+                list.innerHTML += `
+                    <div class="result-item" style="background:white; border:1px solid #e2e8f0; border-radius:10px; padding:20px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <div><h4 style="margin:0 0 5px; font-size:1.1rem; color:#0f172a;">${doc.name}</h4><p style="margin:0; font-size:0.85rem; color:#64748b;"><i class="fa-solid fa-folder-open"></i> ${doc.folder} | Extrato: "${doc.text}"</p></div>
+                        <div style="background:#dcfce7; color:#166534; padding:5px 10px; border-radius:6px; font-weight:bold; font-size:0.8rem;">Match IA</div>
+                    </div>`;
+            }
         });
-    }
+        if (!achou) list.innerHTML = `<div style="padding:20px; text-align:center; color:#ef4444; border:1px solid #fca5a5; border-radius:8px;">Nenhum documento encontrado.</div>`;
+    }, 800);
 }
 
-// ==========================================
-// GRÁFICOS E DIAGRAMAS
-// ==========================================
-function initPricingChart() {
+// UI: Gráficos de Viabilidade e Fluxos
+function showFlow(id) {
+    document.querySelectorAll('.flow-diagram, .ft-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(`flow-${id}`).classList.add('active');
+    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+}
+
+function initChart() {
     const ctx = document.getElementById('costChart');
     if (!ctx || typeof Chart === 'undefined') return;
-
     new Chart(ctx.getContext('2d'), {
         type: 'bar',
         data: {
-            labels: ['Gemini 2.5 Flash', 'GPT-5.4 mini', 'Gemini 2.5 Pro', 'GPT-5.4', 'Syntex Estruturado'],
-            datasets: [{
-                label: 'Custo Mensal Estimado (R$)',
-                data: [5.22, 11.13, 21.31, 37.12, 825.00],
-                backgroundColor: ['#22c55e', '#94a3b8', '#3b82f6', '#64748b', '#ef4444'],
-                borderRadius: 6
-            }]
+            labels: ['Gemini Flash', 'GPT mini', 'Gemini Pro', 'GPT-5.4', 'Syntex Estruturado'],
+            datasets: [{ label: 'Custo Mensal (R$)', data: [5.22, 11.13, 21.31, 37.12, 825.00], backgroundColor: ['#22c55e', '#94a3b8', '#3b82f6', '#64748b', '#ef4444'], borderRadius: 6 }]
         },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            animation: { duration: 1500, easing: 'easeOutQuart' },
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
     });
-}
-
-function showFlow(flowId) {
-    document.querySelectorAll('.flow-diagram').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.ft-btn').forEach(el => el.classList.remove('active'));
-
-    const targetFlow = document.getElementById(`flow-${flowId}`);
-    if (targetFlow) targetFlow.classList.add('active');
-    if (event && event.currentTarget) event.currentTarget.classList.add('active');
 }
