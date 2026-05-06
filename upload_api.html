@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Siebot AI | Integração SharePoint</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="assets/cs/style_upload.css"> 
+</head>
+<body class="app-layout">
+
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <img src="assets/img/SIEBOT.png" alt="Siebot Logo" class="brand-logo">
+        </div>
+        
+        <div class="user-profile">
+            <div class="avatar">CF</div>
+            <div class="user-info">
+                <strong>Camilli</strong>
+                <span>Acesso Administrativo</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <p class="menu-label">Inteligência Artificial</p>
+            <button class="menu-btn active" onclick="switchView('upload')">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Ingestão de Dados
+            </button>
+            <button class="menu-btn" onclick="switchView('search')">
+                <i class="fa-solid fa-magnifying-glass"></i> Busca Semântica
+            </button>
+            
+            <p class="menu-label mt-4">Gestão do Projeto</p>
+            <button class="menu-btn highlight-btn" onclick="switchView('pricing')">
+                <i class="fa-solid fa-chart-pie"></i> Viabilidade & Fluxos
+            </button>
+        </nav>
+
+        <a href="index.html" class="back-to-hub"><i class="fa-solid fa-arrow-left"></i> Sair para o Hub</a>
+    </aside>
+
+    <main class="app-content">
+        
+        <section id="view-upload" class="view-panel active">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-microchip text-primary"></i> Motor de Indexação (Upload)</h2>
+                <p>Arraste arquivos. O motor inferirá metadados e estruturará no SharePoint Graph API.</p>
+            </div>
+
+            <div id="step-upload" class="step-card active">
+                <div class="context-bar">
+                    <label>Direcionamento Cognitivo (Opcional):</label>
+                    <select id="ai-hint" class="input-modern">
+                        <option value="auto">Detecção 100% Automática</option>
+                        <option value="rh">Forçar: Recursos Humanos</option>
+                        <option value="fin">Forçar: Financeiro</option>
+                        <option value="jur">Forçar: Jurídico</option>
+                        <option value="log">Forçar: Logística</option>
+                    </select>
+                </div>
+
+                <div class="drop-area" id="drop-zone">
+                    <i class="fa-solid fa-file-arrow-up drop-icon"></i>
+                    <h3>Arraste o documento corporativo aqui</h3>
+                    <p>Suporte para PDF, DOCX, XLSX e XML</p>
+                    <input type="file" id="file-input" hidden>
+                    <button type="button" class="btn-primary mt-3" id="btn-select-file">Procurar no Computador</button>
+                </div>
+            </div>
+
+            <div id="step-processing" class="step-card">
+                <div class="terminal-box">
+                    <div class="term-header">
+                        <div class="mac-btns"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+                        Siebot AI | Processamento Ativo
+                    </div>
+                    <div class="term-body" id="ai-logs"></div>
+                </div>
+            </div>
+
+            <div id="step-results" class="step-card">
+                <div class="result-header">
+                    <div class="score-badge" id="ai-score">98%</div>
+                    <div>
+                        <h3 style="margin:0; color:#166534;">Análise Concluída</h3>
+                        <p style="margin:0; font-size:0.85rem; color:#15803d;">Preparado para Graph API</p>
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group col-12">
+                        <label>Nome Padronizado Sugerido</label>
+                        <input type="text" id="meta-filename" class="input-modern bold-text">
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Pasta Destino (SharePoint)</label>
+                        <input type="text" id="meta-folder" class="input-modern" readonly>
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Categoria Identificada</label>
+                        <input type="text" id="meta-category" class="input-modern" readonly>
+                    </div>
+                    <div class="form-group col-12">
+                        <label>Tags & Entidades Extraídas</label>
+                        <div class="tags-wrapper" id="meta-tags"></div>
+                    </div>
+                </div>
+                <div class="actions-footer">
+                    <button class="btn-ghost" onclick="resetUpload()">Descartar</button>
+                    <button class="btn-primary" id="btn-submit" onclick="syncSharePoint()"><i class="fa-brands fa-microsoft"></i> Sincronizar via Graph API</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-search" class="view-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-brain text-primary"></i> Busca Semântica</h2>
+                <p>Encontre arquivos pelo contexto, não apenas pelo nome.</p>
+            </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="ai-search-input" class="input-modern" placeholder="Ex: Contratos de aluguel de 2026...">
+                    <button class="btn-primary" onclick="runSearch()"><i class="fa-solid fa-sparkles"></i></button>
+                </div>
+                <div id="search-results-list" class="results-list mt-4"></div>
+            </div>
+        </section>
+
+        <section id="view-pricing" class="view-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-chart-pie text-primary"></i> Viabilidade do Projeto & Arquitetura</h2>
+                <p>Análise de custos operacionais (base: 1.100 docs/mês) e fluxos de engenharia.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
+                
+                <div class="cost-cards">
+                    <h3 class="section-title">Custo Mensal (IA Própria)</h3>
+                    <div class="price-card winner">
+                        <div class="pc-header">Gemini 2.5 Flash <span>Recomendado</span></div>
+                        <div class="pc-price">~R$ 5,22 <span>/ mês</span></div>
+                    </div>
+                    <div class="price-card">
+                        <div class="pc-header">GPT-5.4 mini</div>
+                        <div class="pc-price">~R$ 11,13 <span>/ mês</span></div>
+                    </div>
+                    
+                    <h3 class="section-title mt-4">Custo Mensal (Microsoft Syntex)</h3>
+                    <div class="price-card loser">
+                        <div class="pc-header">Syntex (Modelo Estruturado)</div>
+                        <div class="pc-price">~R$ 825,00 <span>/ mês</span></div>
+                        <div class="pc-sub">Base: 3.300 páginas</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title mt-5 mb-3">Diagramas de Sequência</h3>
+            
+            <div class="flow-tabs">
+                <button class="ft-btn active" onclick="showFlow('api')">Proposta: Fluxo API Própria</button>
+                <button class="ft-btn" onclick="showFlow('automate')">Alternativa: Power Automate</button>
+                <button class="ft-btn" onclick="showFlow('syntex')">Alternativa: MS Syntex</button>
+            </div>
+
+            <div id="flow-api" class="flow-diagram active">
+                <div class="flow-step"><i class="fa-solid fa-user"></i> Usuário<br><small>Upload Arquivo</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Envia p/ leitura</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrows-turn-right"></i> JSON <i class="fa-solid fa-arrows-turn-left"></i></div>
+                <div class="flow-step highlight-step"><i class="fa-solid fa-microchip"></i> API IA<br><small>Gemini / GPT</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i> Processa & Upload</div>
+                <div class="flow-step"><i class="fa-brands fa-microsoft"></i> SharePoint<br><small>Salva metadados via Graph</small></div>
+            </div>
+
+            <div id="flow-automate" class="flow-diagram">
+                <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Upload oculto</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step"><i class="fa-brands fa-microsoft"></i> Dropzone<br><small>Pasta Oculta</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-bolt"></i> Gatilho</div>
+                <div class="flow-step"><i class="fa-solid fa-gears"></i> Automate<br><small>Lê metadados e move</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step"><i class="fa-regular fa-folder-open"></i> Pasta Final<br><small>Arquivo organizado</small></div>
+            </div>
+
+            <div id="flow-syntex" class="flow-diagram">
+                <div class="flow-step"><i class="fa-solid fa-server"></i> Web App<br><small>Upload arquivo cru</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step"><i class="fa-brands fa-microsoft"></i> SharePoint<br><small>Aciona IA Interna</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step"><i class="fa-solid fa-brain"></i> MS Syntex<br><small>Analisa e extrai dados</small></div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step"><i class="fa-solid fa-table-columns"></i> SharePoint<br><small>Atualiza colunas</small></div>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="assets/js/database.js"></script>
+    <script src="assets/js/siebot_brain.js"></script>
+    <script src="assets/js/upload_ai.js"></script>
+</body>
+</html>
