@@ -72,7 +72,7 @@ class SiebotBrain {
             logCallback(`[ENGINE] Aplicando inferência heurística baseada no modelo interno...`);
 
             for (const [deptId, data] of Object.entries(this.knowledgeBase)) {
-                let score = userHint === deptId ? 2.5 : 0; 
+                let score = userHint === deptId ? 2.5 : 0;
                 if (userHint === deptId) logCallback(`[BIAS] Viés cognitivo direcionado para: ${data.nome}`, true);
 
                 for (const [kw, weight] of Object.entries(data.keywords)) {
@@ -103,7 +103,7 @@ class SiebotBrain {
             }
 
             let confidence = Math.min(99.9, (highestScore * 20) + 50 + (Math.random() * 5)).toFixed(1);
-            
+
             logCallback(`[MATCH] Padrão reconhecido com sucesso. Categoria: ${bestMatch.nome} (${confidence}%)`, true);
             await this.sleep(600);
             logCallback(`[SHAREPOINT] Preparando payload e metadados para Graph API...`);
@@ -131,7 +131,7 @@ class SiebotBrain {
         await this.sleep(800);
         const q = query.toLowerCase();
         const results = [];
-        
+
         // Agora a IA busca diretamente no nosso Banco de Dados Local!
         const databaseDocs = siebotDB.getAll();
 

@@ -1,11 +1,14 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SieShare AI | SharePoint Inteligente</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style_upload.css">
 </head>
@@ -64,9 +67,7 @@
     </header>
 
     <main class="main-canvas">
-
         <section id="view-presentation" class="view-panel active">
-
             <div class="hero-card">
                 <div class="hero-copy">
                     <span class="eyebrow">
@@ -77,9 +78,9 @@
                     <h1>SharePoint Inteligente para organizar documentos automaticamente.</h1>
 
                     <p>
-                        A aplicação transforma o upload comum em uma esteira inteligente:
-                        interpreta o documento, extrai tipo, cliente e data, cria um nome padronizado,
-                        envia para a pasta correta e permite busca por linguagem natural.
+                        O SieShare transforma o upload comum em uma esteira inteligente:
+                        interpreta o documento, extrai metadados relevantes, cria um nome padronizado,
+                        define a pasta correta no SharePoint e prepara o arquivo para buscas mais precisas.
                     </p>
 
                     <div class="hero-actions">
@@ -120,28 +121,93 @@
                         </div>
 
                         <div class="mini-json">{
-  "tipo": "Nota Fiscal",
-  "cliente": "Empresa Exemplo",
-  "data": "2026-05-06",
-  "pasta": "/Financeiro/Notas Fiscais/2026",
-  "nomeFinal": "NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.pdf"
-}</div>
+                            "nomeDocumento": "NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.pdf",
+                            "nomeOriginal": "NF_45877.pdf",
+                            "tipo": "Nota Fiscal",
+                            "cliente": "Empresa Exemplo",
+                            "dataCriacao": "2026-04-30",
+                            "dataModificacao": "2026-05-06",
+                            "ultimoUsuario": "Carlos Eduardo",
+                            "pasta": "/Financeiro/Notas Fiscais/2026"
+                            }</div>
+
+                        <div class="sharepoint-preview">
+                            <div class="sharepoint-preview-header">
+                                <div>
+                                    <span class="sharepoint-label">Simulação SharePoint</span>
+                                    <h3>Colunas GED geradas a partir do JSON</h3>
+                                    <p>
+                                        Os dados retornados pela API IA são convertidos em metadados no SharePoint,
+                                        permitindo padronização, rastreabilidade e pesquisa inteligente.
+                                    </p>
+                                </div>
+
+                                <span class="sharepoint-status">
+                                    <i class="fa-solid fa-check"></i>
+                                    Metadados aplicados
+                                </span>
+                            </div>
+
+                            <div class="sharepoint-scroll">
+                                <div class="sharepoint-table">
+                                    <div class="sp-row sp-head">
+                                        <div>Nome documento</div>
+                                        <div>Nome Original</div>
+                                        <div>Tipo</div>
+                                        <div>Cliente</div>
+                                        <div>Data Criação</div>
+                                        <div>Data Modificação</div>
+                                        <div>Últ. Usuário</div>
+                                        <div>Pasta</div>
+                                    </div>
+
+                                    <div class="sp-row">
+                                        <div class="sp-file-name">
+                                            <i class="fa-regular fa-file-pdf"></i>
+                                            <span>NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.pdf</span>
+                                        </div>
+
+                                        <div>NF_45877.pdf</div>
+
+                                        <div>
+                                            <span class="sp-pill">Nota Fiscal</span>
+                                        </div>
+
+                                        <div>
+                                            <span class="sp-pill">Empresa Exemplo</span>
+                                        </div>
+
+                                        <div>30/04/2026</div>
+
+                                        <div>06/05/2026</div>
+
+                                        <div>
+                                            <span class="sp-pill user">Carlos Eduardo</span>
+                                        </div>
+
+                                        <div class="sp-folder">
+                                            /Financeiro/Notas Fiscais/2026
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="value-grid">
-
                 <div class="value-card">
                     <i class="fa-solid fa-clock"></i>
                     <h3>Menos arquivamento manual</h3>
-                    <p>O usuário não escolhe pasta manualmente. A IA interpreta o documento e sugere o destino correto.</p>
+                    <p>O usuário não escolhe pasta manualmente. A IA interpreta o documento e sugere o destino correto.
+                    </p>
                 </div>
 
                 <div class="value-card">
                     <i class="fa-solid fa-tags"></i>
                     <h3>Metadados inteligentes</h3>
-                    <p>Tipo, cliente, data, departamento e tags são extraídos para tornar a busca mais precisa.</p>
+                    <p>Tipo, cliente, datas, usuário e pasta são extraídos para tornar a busca mais precisa.</p>
                 </div>
 
                 <div class="value-card">
@@ -153,15 +219,13 @@
                 <div class="value-card">
                     <i class="fa-solid fa-coins"></i>
                     <h3>Baixo custo operacional</h3>
-                    <p>O modelo centralizado em API IA tende a ser mais econômico que alternativas nativas por página.</p>
+                    <p>O modelo centralizado em API IA tende a ser mais econômico que alternativas nativas por página.
+                    </p>
                 </div>
-
             </div>
-
         </section>
 
         <section id="view-workspace" class="view-panel">
-
             <div class="workspace-tabs">
                 <button class="workspace-tab active" onclick="switchWorkspaceTab('submit', this)">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -180,24 +244,20 @@
             </div>
 
             <div id="workspace-submit" class="workspace-panel active">
-
                 <div class="split-layout single-focus">
-
                     <div class="tech-card">
-
                         <div class="card-title">
                             <i class="fa-solid fa-robot text-primary"></i>
                             Motor de ingestão cognitiva
                         </div>
 
                         <p class="text-muted">
-                            Nesta demo para leitura de arquivos textuais é fictícia.
-                            Para PDF, DOCX e XLSX, a tela simula a resposta esperada de uma API IA,
+                            Nesta demonstração, a leitura de arquivos textuais é simulada.
+                            Para PDF, DOCX e XLSX, a tela representa a resposta esperada de uma API IA,
                             sem gerar nomes a partir do nome original do arquivo.
                         </p>
 
                         <div id="step-upload" class="engine-step active">
-
                             <select id="ai-hint" class="tech-input mb-3">
                                 <option value="auto">Detecção automática pela API IA</option>
                                 <option value="nf">Documento: Nota Fiscal</option>
@@ -210,37 +270,29 @@
                                 <i class="fa-solid fa-file-circle-plus icon-lg"></i>
                                 <h4>Arraste o arquivo para análise</h4>
                                 <span class="text-muted">Suporta .pdf, .docx, .xml, .xlsx, .csv, .txt</span>
-
                                 <input type="file" id="file-input" hidden>
-
-                                <button class="btn-outline mt-3" onclick="document.getElementById('file-input').click()">
+                                <button class="btn-outline mt-3"
+                                    onclick="document.getElementById('file-input').click()">
                                     Procurar arquivo
                                 </button>
                             </div>
-
                         </div>
 
                         <div id="step-processing" class="engine-step">
-
                             <div class="console-window">
                                 <div class="console-header">
                                     sieshare-ai: api_ia_document_intelligence
                                 </div>
-
                                 <div class="console-body" id="ai-logs"></div>
                             </div>
-
                         </div>
 
                         <div id="step-results" class="engine-step">
-
                             <div class="success-alert">
                                 <i class="fa-solid fa-check-circle"></i>
                                 Documento interpretado. Revise os metadados antes de publicar.
                             </div>
-
                             <div class="form-grid">
-
                                 <div class="col-full">
                                     <label>Nome final criado pela IA</label>
                                     <input type="text" id="meta-filename" class="tech-input hl">
@@ -280,9 +332,7 @@
                                     <label>Tags semânticas</label>
                                     <div class="tags-container" id="meta-tags"></div>
                                 </div>
-
                             </div>
-
                             <div class="action-row">
                                 <button class="btn-text" onclick="resetUpload()">Analisar outro</button>
 
@@ -291,30 +341,23 @@
                                     Publicar no SharePoint
                                 </button>
                             </div>
-
                         </div>
-
                     </div>
 
                     <div class="tech-card side-insight">
-
                         <div class="card-title">
                             <i class="fa-solid fa-list-check text-primary"></i>
                             O que a API IA retorna
                         </div>
-
                         <ul class="check-list">
-                            <li>Tipo documental: contrato, nota fiscal, currículo, pedido, relatório etc.</li>
-                            <li>Cliente, fornecedor, colaborador ou entidade principal do documento.</li>
-                            <li>Data relevante encontrada no conteúdo do arquivo.</li>
-                            <li>Nome final padronizado sem copiar o nome original do upload.</li>
-                            <li>Pasta final, tags e payload compatível com Microsoft Graph API.</li>
+                            <li>Nome final padronizado, sem depender do nome original enviado pelo usuário.</li>
+                            <li>Nome original preservado para auditoria e rastreabilidade.</li>
+                            <li>Tipo documental, cliente, datas relevantes e último usuário responsável.</li>
+                            <li>Pasta final sugerida para publicação no SharePoint.</li>
+                            <li>Payload compatível com automações e Microsoft Graph API.</li>
                         </ul>
-
                     </div>
-
                 </div>
-
             </div>
 
             <div id="workspace-search" class="workspace-panel">
@@ -326,17 +369,13 @@
                     </div>
 
                     <p class="text-muted">
-                        A barra reinicia após cada busca. A pesquisa consulta tipo documental,
-                        cliente, entidade, pasta, tags e texto extraído.
+                        A pesquisa consulta tipo documental, cliente, entidade, pasta, tags e texto extraído,
+                        permitindo encontrar documentos mesmo sem saber o nome exato do arquivo.
                     </p>
 
                     <div class="search-wrap">
-                        <input
-                            type="text"
-                            id="ai-search-input"
-                            class="tech-input"
-                            placeholder="Ex: nota fiscal maio, contrato prestador, RH, fornecedor"
-                        >
+                        <input type="text" id="ai-search-input" class="tech-input"
+                            placeholder="Ex: nota fiscal maio, contrato prestador, RH, fornecedor">
 
                         <button class="btn-filled" onclick="runSearch()">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -350,26 +389,19 @@
             </div>
 
             <div id="workspace-uploads" class="workspace-panel">
-
                 <div class="tech-card">
-
                     <div class="card-title flex-between">
                         <span>
                             <i class="fa-solid fa-database text-primary"></i>
                             Últimos uploads indexados
                         </span>
-
                         <span class="badge">1.100 documentos/mês</span>
                     </div>
-
                     <p class="text-muted mb-4">
                         Clique em um documento para ver metadados, payload e destino final.
                     </p>
-
                     <div class="doc-list" id="recent-docs-list"></div>
-
                 </div>
-
             </div>
 
         </section>
@@ -406,24 +438,20 @@
             </div>
 
             <div class="plan-grid">
-
                 <article class="plan-card recommended">
                     <div class="plan-kicker">Plano recomendado</div>
-
                     <h2>API IA própria + Graph API</h2>
 
                     <p>
                         O arquivo é enviado para a aplicação, a API IA interpreta o conteúdo,
                         devolve um JSON estruturado e o back-end publica no SharePoint.
                     </p>
-
                     <div class="price-table mini">
                         <div><strong>Gemini 2.5 Flash</strong><span>~R$ 5,22/mês</span></div>
                         <div><strong>GPT-5.4 mini</strong><span>~R$ 11,13/mês</span></div>
                         <div><strong>Gemini 2.5 Pro</strong><span>~R$ 21,31/mês</span></div>
                         <div><strong>GPT-5.4</strong><span>~R$ 37,12/mês</span></div>
                     </div>
-
                     <div class="formula-box">
                         Cálculo: entrada mensal × preço entrada + saída mensal × preço saída, convertido para BRL.
                     </div>
@@ -431,20 +459,16 @@
 
                 <article class="plan-card warning">
                     <div class="plan-kicker">Alternativa Microsoft</div>
-
                     <h2>Microsoft Syntex</h2>
-
                     <p>
                         A cobrança é por página processada. Considerando 3 páginas por arquivo:
                         1.100 documentos × 3 páginas = 3.300 páginas/mês.
                     </p>
-
                     <div class="price-table mini">
                         <div><strong>Não estruturado</strong><span>~R$ 82,50/mês</span></div>
                         <div><strong>Pré-criado</strong><span>~R$ 165,00/mês</span></div>
                         <div><strong>Estruturado / Forma livre</strong><span>~R$ 825,00/mês</span></div>
                     </div>
-
                     <div class="formula-box">
                         Cálculo: 3.300 páginas × preço por página × R$ 5,00.
                     </div>
@@ -452,7 +476,6 @@
 
                 <article class="plan-card neutral">
                     <div class="plan-kicker">Automação operacional</div>
-
                     <h2>Power Automate</h2>
 
                     <p>
@@ -471,13 +494,10 @@
                         Melhor uso: automações posteriores ao upload e notificações internas.
                     </div>
                 </article>
-
             </div>
 
             <div class="tech-card mt-4">
-
                 <div class="card-title flex-between">
-
                     <span>
                         <i class="fa-solid fa-code-branch text-primary"></i>
                         Diagramas de sequência completos
@@ -488,7 +508,6 @@
                         <button class="ft-btn" onclick="showFlow('automate', this)">Power Automate</button>
                         <button class="ft-btn" onclick="showFlow('syntex', this)">Syntex</button>
                     </div>
-
                 </div>
 
                 <div id="flow-api" class="diagram-panel active">
@@ -498,7 +517,6 @@
                         upload, envio para API IA, retorno JSON, montagem da requisição, upload via Graph API,
                         gravação no SharePoint e retorno do nome/pasta ao usuário.
                     </div>
-
                     <div class="sequence-wrap" data-diagram="api"></div>
                 </div>
 
@@ -509,7 +527,6 @@
                         a IA ainda analisa o documento, mas o arquivo passa por uma pasta dropzone,
                         aguarda gatilho e só depois é movido para a pasta final.
                     </div>
-
                     <div class="sequence-wrap" data-diagram="automate"></div>
                 </div>
 
@@ -520,16 +537,13 @@
                         o documento entra primeiro no SharePoint, depois o Syntex processa,
                         extrai dados e atualiza colunas/tags na biblioteca.
                     </div>
-
                     <div class="sequence-wrap" data-diagram="syntex"></div>
                 </div>
 
             </div>
-
         </section>
-
     </main>
-
     <script src="assets/js/upload_ai.js"></script>
 </body>
+
 </html>
