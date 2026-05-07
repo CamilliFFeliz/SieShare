@@ -3,269 +3,484 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Siebot AI | SharePoint Architecture</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>SieShare AI | SharePoint Document Intelligence</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <link rel="stylesheet" href="assets/css/style_upload.css"> 
+    <link rel="stylesheet" href="assets/css/style_upload.css">
 </head>
+
 <body class="tech-layout">
 
     <div id="doc-modal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
                 <div class="modal-title">
-                    <i class="fa-solid fa-file-lines text-primary"></i> 
-                    <span>Inspeção de Objeto (Graph API)</span>
+                    <i class="fa-solid fa-file-shield text-primary"></i>
+                    <span>Inspeção inteligente do arquivo</span>
                 </div>
-                <button class="btn-close" onclick="closeDocPreview()"><i class="fa-solid fa-xmark"></i></button>
+
+                <button class="btn-close" onclick="closeDocPreview()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-            <div class="modal-body" id="doc-modal-content">
-            </div>
+
+            <div class="modal-body" id="doc-modal-content"></div>
         </div>
     </div>
 
     <header class="top-navbar">
         <div class="nav-brand">
-            <img src="assets/img/SIEBOT.png" alt="Logo" class="brand-logo" width="110">
-            <span class="module-name">/ sharepoint-ai-core</span>
+            <img src="assets/img/SIEBOT.png" alt="Logo Siebot" class="brand-logo">
+            <span class="module-name">/ sieshare-ai</span>
         </div>
+
         <nav class="nav-links">
-            <button class="nav-tab active" onclick="switchView('workspace')"><i class="fa-solid fa-terminal"></i> Workspace</button>
-            <button class="nav-tab" onclick="switchView('architecture')"><i class="fa-solid fa-diagram-project"></i> Arquitetura & Viabilidade</button>
-            <a href="index.html" class="nav-action-btn"><i class="fa-solid fa-door-open"></i> Sair</a>
+            <button class="nav-tab active" onclick="switchView('presentation', this)">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                Apresentação
+            </button>
+
+            <button class="nav-tab" onclick="switchView('workspace', this)">
+                <i class="fa-solid fa-layer-group"></i>
+                Demo
+            </button>
+
+            <button class="nav-tab" onclick="switchView('architecture', this)">
+                <i class="fa-solid fa-diagram-project"></i>
+                Planos & Diagramas
+            </button>
+
+            <a href="index.html" class="nav-action-btn">
+                <i class="fa-solid fa-door-open"></i>
+                Sair
+            </a>
         </nav>
     </header>
 
     <main class="main-canvas">
-        
-        <section id="view-workspace" class="view-panel active">
-            <section class="presentation-hero">
+
+        <section id="view-presentation" class="view-panel active">
+
+            <div class="hero-card">
                 <div class="hero-copy">
-                    <span class="eyebrow"><i class="fa-solid fa-sparkles"></i> SharePoint AI Core</span>
-                    <h1>Central de upload, pesquisa e auditoria documental com IA.</h1>
-                    <p>Uma experiência separada por etapas: submeta arquivos, pesquise conteúdos indexados e acompanhe os últimos uploads sem misturar os fluxos.</p>
+                    <span class="eyebrow">
+                        <i class="fa-solid fa-brain"></i>
+                        SharePoint com camada cognitiva
+                    </span>
+
+                    <h1>
+                        SieShare AI transforma upload de documentos em organização automática.
+                    </h1>
+
+                    <p>
+                        Uma prova visual de como a empresa pode reduzir triagem manual,
+                        padronizar nomes, classificar departamentos e publicar arquivos no
+                        SharePoint com metadados rastreáveis.
+                    </p>
+
                     <div class="hero-actions">
-                        <button class="btn-filled btn-lg" onclick="switchWorkspaceTab('submit')"><i class="fa-solid fa-cloud-arrow-up"></i> Começar submissão</button>
-                        <button class="btn-outline btn-lg" onclick="switchWorkspaceTab('search')"><i class="fa-solid fa-magnifying-glass-chart"></i> Abrir pesquisa</button>
+                        <button class="btn-filled btn-lg" onclick="switchView('workspace')">
+                            <i class="fa-solid fa-play"></i>
+                            Ver demonstração
+                        </button>
+
+                        <button class="btn-outline btn-lg" onclick="switchView('architecture')">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                            Comparar planos
+                        </button>
                     </div>
                 </div>
+
                 <div class="hero-panel">
-                    <div class="hero-metric"><span>1.100</span><small>docs/mês estimados</small></div>
-                    <div class="hero-metric"><span>98%</span><small>confiança média IA</small></div>
-                    <div class="hero-pipeline">
-                        <div><i class="fa-solid fa-file-arrow-up"></i> Upload</div>
-                        <i class="fa-solid fa-arrow-right"></i>
-                        <div><i class="fa-solid fa-brain"></i> IA</div>
-                        <i class="fa-solid fa-arrow-right"></i>
-                        <div><i class="fa-brands fa-microsoft"></i> SharePoint</div>
+                    <div class="live-card">
+                        <div class="live-head">
+                            <span class="dot"></span>
+                            Classificação simulada
+                        </div>
+
+                        <div class="live-file">
+                            <i class="fa-solid fa-file-invoice"></i>
+                            <strong>NF_COMPRA_NOTEBOOKS_MAIO.xml</strong>
+                        </div>
+
+                        <div class="pipeline-mini">
+                            <span>Arquivo</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <span>IA</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <span>Metadados</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <span>SharePoint</span>
+                        </div>
+
+                        <div class="mini-json">
+{
+  "departamento": "Financeiro",
+  "pasta": "/Financeiro/Notas",
+  "confianca": "99%"
+}
+                        </div>
                     </div>
                 </div>
-            </section>
-
-            <div class="workspace-tabs" role="tablist" aria-label="Fluxos do SharePoint AI">
-                <button class="workspace-tab active" data-tab="submit" onclick="switchWorkspaceTab('submit')"><i class="fa-solid fa-paper-plane"></i> Submissão</button>
-                <button class="workspace-tab" data-tab="search" onclick="switchWorkspaceTab('search')"><i class="fa-solid fa-magnifying-glass"></i> Pesquisa</button>
-                <button class="workspace-tab" data-tab="uploads" onclick="switchWorkspaceTab('uploads')"><i class="fa-solid fa-clock-rotate-left"></i> Últimos uploads</button>
             </div>
 
-            <div class="workspace-shell">
-                <article id="tab-submit" class="workspace-pane active">
-                    <div class="pane-grid submit-grid">
-                        <div class="tech-card featured-card">
-                            <div class="card-kicker">Etapa 01</div>
-                            <div class="card-title">Submissão inteligente</div>
-                            <p class="text-muted">Envie um documento para análise semântica, padronização do nome e definição automática da pasta de destino.</p>
-                            <div id="step-upload" class="engine-step active">
-                                <select id="ai-hint" class="tech-input mb-3">
-                                    <option value="auto">Detecção Automática (Recomendado)</option>
-                                    <option value="rh">Forçar Contexto: Recursos Humanos</option>
-                                    <option value="fin">Forçar Contexto: Financeiro</option>
-                                    <option value="jur">Forçar Contexto: Jurídico</option>
-                                </select>
-                                <div class="upload-zone" id="drop-zone">
-                                    <i class="fa-solid fa-arrow-up-from-bracket icon-lg"></i>
-                                    <h4>Arraste o arquivo para análise</h4>
-                                    <span class="text-muted">Suporta .pdf, .docx, .xml, .xlsx</span>
-                                    <input type="file" id="file-input" hidden>
-                                    <button class="btn-outline mt-3" onclick="document.getElementById('file-input').click()">Procurar Arquivo</button>
-                                </div>
-                            </div>
-                            <div id="step-processing" class="engine-step">
-                                <div class="console-window">
-                                    <div class="console-header">root@siebot-ai:~# process_document</div>
-                                    <div class="console-body" id="ai-logs"></div>
-                                </div>
-                            </div>
-                            <div id="step-results" class="engine-step">
-                                <div class="success-alert"><i class="fa-solid fa-check-circle"></i> Documento interpretado e formatado com sucesso.</div>
-                                <div class="form-grid">
-                                    <div class="col-full"><label>Nome Canônico</label><input type="text" id="meta-filename" class="tech-input hl"></div>
-                                    <div class="col-half"><label>Diretório Alvo</label><input type="text" id="meta-folder" class="tech-input" readonly></div>
-                                    <div class="col-half"><label>Confiança IA</label><div class="score-pill" id="ai-score">98%</div></div>
-                                    <div class="col-full"><label>Tags Semânticas</label><div class="tags-container" id="meta-tags"></div></div>
-                                </div>
-                                <div class="action-row">
-                                    <button class="btn-text" onclick="resetUpload()">Descartar</button>
-                                    <button class="btn-filled" id="btn-submit" onclick="syncSharePoint()"><i class="fa-brands fa-microsoft"></i> Indexar no SharePoint</button>
-                                </div>
-                            </div>
-                        </div>
-                        <aside class="process-card">
-                            <h3>Como a submissão acontece</h3>
-                            <div class="process-step"><span>01</span><div><strong>Leitura</strong><small>Arquivo convertido para análise da IA.</small></div></div>
-                            <div class="process-step"><span>02</span><div><strong>Classificação</strong><small>Departamento, tags e pasta são sugeridos.</small></div></div>
-                            <div class="process-step"><span>03</span><div><strong>Indexação</strong><small>Documento salvo no SharePoint com metadados.</small></div></div>
-                        </aside>
-                    </div>
-                </article>
+            <div class="value-grid">
 
-                <article id="tab-search" class="workspace-pane">
-                    <div class="tech-card search-card-full">
-                        <div class="card-kicker">Etapa 02</div>
-                        <div class="card-title">Pesquisa semântica</div>
-                        <p class="text-muted">Pesquise por nome, contexto, tags ou diretório. Os resultados aparecem em uma área própria, sem disputar espaço com o upload.</p>
-                        <div class="search-wrap elevated-search">
-                            <input type="text" id="ai-search-input" class="tech-input" placeholder="O que você procura? Ex: contratos de 2026">
-                            <button class="btn-filled" onclick="runSearch()"><i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>
-                        </div>
-                        <div id="search-results-list" class="search-results-panel mt-3"></div>
-                    </div>
-                </article>
+                <div class="value-card">
+                    <i class="fa-solid fa-clock"></i>
+                    <h3>Menos trabalho manual</h3>
+                    <p>A IA sugere pasta, nome, tags e motivo da classificação antes do envio.</p>
+                </div>
 
-                <article id="tab-uploads" class="workspace-pane">
-                    <div class="tech-card uploads-card-full">
-                        <div class="card-title flex-between">
-                            <span><i class="fa-solid fa-clock-rotate-left text-primary"></i> Últimos uploads indexados</span>
-                            <span class="badge">1.100 docs/mês</span>
-                        </div>
-                        <p class="text-muted mb-4">Área separada para consultar o histórico recente e inspecionar metadados extraídos.</p>
-                        <div class="doc-list uploads-list" id="recent-docs-list"></div>
-                    </div>
-                </article>
+                <div class="value-card">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    <h3>Busca demonstrável</h3>
+                    <p>A busca local consulta nome, conteúdo lido, tags, departamento e pasta.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Governança</h3>
+                    <p>O fluxo preserva rastreabilidade: confiança, evidências e payload para Graph API.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fa-solid fa-coins"></i>
+                    <h3>Argumento financeiro</h3>
+                    <p>Comparação clara entre IA própria, Microsoft Syntex e Power Automate.</p>
+                </div>
+
             </div>
+
+        </section>
+
+        <section id="view-workspace" class="view-panel">
+
+            <div class="workspace-tabs">
+                <button class="workspace-tab active" onclick="switchWorkspaceTab('submit', this)">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    Submeter arquivo
+                </button>
+
+                <button class="workspace-tab" onclick="switchWorkspaceTab('search', this)">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Pesquisa inteligente
+                </button>
+
+                <button class="workspace-tab" onclick="switchWorkspaceTab('uploads', this)">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Últimos uploads
+                </button>
+            </div>
+
+            <div id="workspace-submit" class="workspace-panel active">
+
+                <div class="split-layout single-focus">
+
+                    <div class="tech-card">
+
+                        <div class="card-title">
+                            <i class="fa-solid fa-robot text-primary"></i>
+                            Motor de ingestão cognitiva
+                        </div>
+
+                        <p class="text-muted">
+                            A demo roda 100% no GitHub Pages. A leitura real é simulada no navegador:
+                            arquivos de texto, XML e CSV são lidos parcialmente; PDFs, DOCX e XLSX são
+                            classificados por nome, extensão e contexto informado.
+                        </p>
+
+                        <div id="step-upload" class="engine-step active">
+
+                            <select id="ai-hint" class="tech-input mb-3">
+                                <option value="auto">Detecção automática</option>
+                                <option value="rh">Contexto: Recursos Humanos</option>
+                                <option value="fin">Contexto: Financeiro</option>
+                                <option value="jur">Contexto: Jurídico</option>
+                                <option value="log">Contexto: Logística</option>
+                            </select>
+
+                            <div class="upload-zone" id="drop-zone">
+                                <i class="fa-solid fa-file-circle-plus icon-lg"></i>
+                                <h4>Arraste o arquivo para análise</h4>
+                                <span class="text-muted">Suporta .pdf, .docx, .xml, .xlsx, .csv, .txt</span>
+
+                                <input type="file" id="file-input" hidden>
+
+                                <button class="btn-outline mt-3" onclick="document.getElementById('file-input').click()">
+                                    Procurar arquivo
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <div id="step-processing" class="engine-step">
+
+                            <div class="console-window">
+                                <div class="console-header">
+                                    sieshare-ai: document_intelligence --local-demo
+                                </div>
+
+                                <div class="console-body" id="ai-logs"></div>
+                            </div>
+
+                        </div>
+
+                        <div id="step-results" class="engine-step">
+
+                            <div class="success-alert">
+                                <i class="fa-solid fa-check-circle"></i>
+                                Documento interpretado. Revise os metadados antes de publicar.
+                            </div>
+
+                            <div class="form-grid">
+
+                                <div class="col-full">
+                                    <label>Nome padronizado</label>
+                                    <input type="text" id="meta-filename" class="tech-input hl">
+                                </div>
+
+                                <div class="col-half">
+                                    <label>Diretório alvo</label>
+                                    <input type="text" id="meta-folder" class="tech-input" readonly>
+                                </div>
+
+                                <div class="col-half">
+                                    <label>Confiança</label>
+                                    <div class="score-pill" id="ai-score">98%</div>
+                                </div>
+
+                                <div class="col-full">
+                                    <label>Justificativa da IA</label>
+                                    <div class="reason-box" id="ai-reason"></div>
+                                </div>
+
+                                <div class="col-full">
+                                    <label>Tags semânticas</label>
+                                    <div class="tags-container" id="meta-tags"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="action-row">
+                                <button class="btn-text" onclick="resetUpload()">Analisar outro</button>
+
+                                <button class="btn-filled" id="btn-submit" onclick="syncSharePoint()">
+                                    <i class="fa-brands fa-microsoft"></i>
+                                    Publicar no SharePoint
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tech-card side-insight">
+
+                        <div class="card-title">
+                            <i class="fa-solid fa-list-check text-primary"></i>
+                            O que a IA verifica
+                        </div>
+
+                        <ul class="check-list">
+                            <li>Nome do arquivo, extensão e possíveis padrões internos.</li>
+                            <li>Palavras-chave do conteúdo quando o navegador consegue ler o arquivo.</li>
+                            <li>Departamento provável, pasta destino, tags e nível de confiança.</li>
+                            <li>Padronização do nome para evitar arquivos soltos no SharePoint.</li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="workspace-search" class="workspace-panel">
+
+                <div class="tech-card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-magnifying-glass-chart text-primary"></i>
+                        Pesquisa inteligente
+                    </div>
+
+                    <p class="text-muted">
+                        A barra reinicia após cada busca, mantendo o resultado na tela.
+                        A busca considera nome, pasta, departamento, tags e texto extraído ou simulado.
+                    </p>
+
+                    <div class="search-wrap">
+                        <input
+                            type="text"
+                            id="ai-search-input"
+                            class="tech-input"
+                            placeholder="Ex: contrato 2026, nota fiscal, RH, logística"
+                        >
+
+                        <button class="btn-filled" onclick="runSearch()">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Buscar
+                        </button>
+                    </div>
+
+                    <div id="search-results-list" class="mt-3"></div>
+                </div>
+
+            </div>
+
+            <div id="workspace-uploads" class="workspace-panel">
+
+                <div class="tech-card">
+
+                    <div class="card-title flex-between">
+                        <span>
+                            <i class="fa-solid fa-database text-primary"></i>
+                            Últimos uploads indexados
+                        </span>
+
+                        <span class="badge">1.100 docs/mês</span>
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        Clique em um documento para ver evidências, tags e o payload que seria enviado ao SharePoint.
+                    </p>
+
+                    <div class="doc-list" id="recent-docs-list"></div>
+
+                </div>
+
+            </div>
+
         </section>
 
         <section id="view-architecture" class="view-panel">
-            
-            <div class="tech-card mb-4">
-                <div class="card-title"><i class="fa-solid fa-calculator text-primary"></i> Memória de Cálculo & Custos (Base Mensal)</div>
-                <div class="calc-grid">
-                    
-                    <div class="calc-box winner-box">
-                        <div class="box-head">
-                            <h5>Gemini 2.5 Flash <span>Recomendado</span></h5>
-                            <div class="final-price">R$ 5,22 <span>/mês</span></div>
-                        </div>
-                        <div class="math-proof">
-                            <div class="math-row"><span>Volume Operacional:</span> <strong>1.100 documentos</strong></div>
-                            <div class="math-row"><span>Tokens de Entrada (1.500/doc):</span> <strong>1.650.000 tokens</strong></div>
-                            <div class="math-row"><span>Tokens de Saída (200/doc):</span> <strong>220.000 tokens</strong></div>
-                            <hr>
-                            <div class="math-row"><span>Custo Entrada (US$ 0,30 / 1M):</span> <strong>US$ 0,495</strong></div>
-                            <div class="math-row"><span>Custo Saída (US$ 2,50 / 1M):</span> <strong>US$ 0,550</strong></div>
-                            <div class="math-row"><span>Total USD:</span> <strong>US$ 1,045</strong></div>
-                            <div class="math-row highlight"><span>Total BRL (Cotação R$ 5,00):</span> <strong>R$ 5,22</strong></div>
-                        </div>
+
+            <div class="plan-grid">
+
+                <article class="plan-card recommended">
+                    <div class="plan-kicker">Plano recomendado</div>
+
+                    <h2>IA própria + Graph API</h2>
+
+                    <p>
+                        Camada inteligente controlada pela empresa, com menor custo,
+                        maior flexibilidade e integração direta.
+                    </p>
+
+                    <div class="plan-price">
+                        R$ 5,22
+                        <span>/ mês estimado</span>
                     </div>
 
-                    <div class="calc-box">
-                        <div class="box-head"><h5>GPT-5.4 mini</h5><div class="final-price text-muted">R$ 11,13 <span>/mês</span></div></div>
-                        <div class="math-proof">
-                            <div class="math-row"><span>In: US$ 0,75 / 1M</span> <strong>US$ 1,23</strong></div>
-                            <div class="math-row"><span>Out: US$ 4,50 / 1M</span> <strong>US$ 0,99</strong></div>
-                            <div class="math-row highlight"><span>Total Estimado:</span> <strong>R$ 11,13</strong></div>
-                        </div>
-                        
-                        <div class="box-head mt-4"><h5>Gemini 2.5 Pro</h5><div class="final-price text-muted">R$ 21,31 <span>/mês</span></div></div>
-                        <div class="math-proof">
-                            <div class="math-row"><span>In: US$ 1,25 / 1M</span> <strong>US$ 2,06</strong></div>
-                            <div class="math-row"><span>Out: US$ 10,00 / 1M</span> <strong>US$ 2,20</strong></div>
-                            <div class="math-row highlight"><span>Total Estimado:</span> <strong>R$ 21,31</strong></div>
-                        </div>
+                    <ul>
+                        <li>Classificação antes do envio</li>
+                        <li>Metadados customizados</li>
+                        <li>Baixo custo por documento</li>
+                        <li>Sem dependência de gatilhos lentos</li>
+                    </ul>
+                </article>
+
+                <article class="plan-card warning">
+                    <div class="plan-kicker">Alternativa Microsoft</div>
+
+                    <h2>Microsoft Syntex</h2>
+
+                    <p>
+                        Bom para cenários totalmente Microsoft, mas menos atraente
+                        para esta prova por custo e lock-in.
+                    </p>
+
+                    <div class="plan-price">
+                        até R$ 825,00
+                        <span>/ mês estimado</span>
                     </div>
 
-                    <div class="calc-box loser-box">
-                        <div class="box-head">
-                            <h5>Microsoft Syntex (Alternativa)</h5>
-                            <div class="final-price">R$ 825,00 <span>/mês</span></div>
-                        </div>
-                        <div class="math-proof">
-                            <div class="math-row"><span>Cobrança por página:</span> <strong>3 páginas/doc</strong></div>
-                            <div class="math-row"><span>Volume em páginas:</span> <strong>3.300 páginas/mês</strong></div>
-                            <hr>
-                            <div class="math-row"><span>Estruturado (US$ 0,05/pág):</span> <strong class="text-danger">US$ 165,00 (R$ 825,00)</strong></div>
-                            <div class="math-row"><span>Pré-criado (US$ 0,01/pág):</span> <strong>US$ 33,00 (R$ 165,00)</strong></div>
-                            <div class="math-row"><span>Não-Estrut. (US$ 0,005/pág):</span> <strong>US$ 16,50 (R$ 82,50)</strong></div>
-                        </div>
-                    </div>
-                </div>
+                    <ul>
+                        <li>Cobrança por página</li>
+                        <li>Modelos presos ao ecossistema</li>
+                        <li>Menor controle sobre lógica</li>
+                        <li>Risco de custo escalar rápido</li>
+                    </ul>
+                </article>
+
+                <article class="plan-card neutral">
+                    <div class="plan-kicker">Automação operacional</div>
+
+                    <h2>Power Automate</h2>
+
+                    <p>
+                        Útil para orquestração simples, porém frágil como motor
+                        principal de classificação documental.
+                    </p>
+
+                    <div class="plan-price">Latência variável</div>
+
+                    <ul>
+                        <li>Depende de gatilhos/polling</li>
+                        <li>Requer dropzones</li>
+                        <li>Mais difícil de demonstrar em tempo real</li>
+                        <li>Fluxo menos elegante para o usuário</li>
+                    </ul>
+                </article>
+
             </div>
 
-            <div class="tech-card">
+            <div class="tech-card mt-4">
+
                 <div class="card-title flex-between">
-                    <span><i class="fa-solid fa-code-branch text-primary"></i> Diagramas de Sequência (UML)</span>
+
+                    <span>
+                        <i class="fa-solid fa-code-branch text-primary"></i>
+                        Diagramas de sequência
+                    </span>
+
                     <div class="flow-tabs">
-                        <button class="ft-btn active" onclick="showFlow('api')">API Própria (Recomendado)</button>
-                        <button class="ft-btn" onclick="showFlow('automate')">Power Automate (Descartado)</button>
-                        <button class="ft-btn" onclick="showFlow('syntex')">MS Syntex (Descartado)</button>
+                        <button class="ft-btn active" onclick="showFlow('api', this)">IA + Graph API</button>
+                        <button class="ft-btn" onclick="showFlow('syntex', this)">Syntex</button>
+                        <button class="ft-btn" onclick="showFlow('automate', this)">Automate</button>
                     </div>
+
                 </div>
 
-                <div id="flow-api" class="uml-diagram active">
+                <div id="flow-api" class="diagram-panel active">
+
                     <div class="uml-description">
-                        <i class="fa-solid fa-check-circle text-primary"></i> <strong>Decisão Arquitetural:</strong> Centraliza a regra de negócio no nosso Back-End. Comunicação REST super rápida, sem gatilhos lentos de pastas e custo de centavos.
+                        <i class="fa-solid fa-check-circle text-primary"></i>
+                        <strong>Mais próximo do fluxo ideal:</strong>
+                        usuário envia o arquivo, back-end chama IA, recebe JSON, grava arquivo e metadados via Microsoft Graph.
                     </div>
-                    
-                    <div class="uml-grid">
-                        <div class="uml-actor">Usuário</div>
-                        <div class="uml-actor">Back-End (Web)</div>
-                        <div class="uml-actor">API IA (Gemini)</div>
-                        <div class="uml-actor">SharePoint (Graph API)</div>
-                        
-                        <div class="uml-msg right" style="grid-column: 1 / 2; grid-row: 2;">1. Upload do Arquivo</div>
-                        <div class="uml-msg right" style="grid-column: 2 / 3; grid-row: 3;">2. Envia doc para leitura (Base64)</div>
-                        <div class="uml-msg left dashed text-primary" style="grid-column: 2 / 3; grid-row: 4;">3. Retorna JSON estruturado</div>
-                        <div class="uml-msg self" style="grid-column: 2 / 3; grid-row: 5;">4. Processa, renomeia e monta payload</div>
-                        <div class="uml-msg right" style="grid-column: 2 / 4; grid-row: 6;">5. Upload via Graph API / Rest</div>
-                        <div class="uml-msg self" style="grid-column: 4 / 5; grid-row: 7;">6. Salva na pasta com metadados</div>
-                        <div class="uml-msg left dashed" style="grid-column: 2 / 4; grid-row: 8;">7. Confirmação HTTP 201 Created</div>
-                        <div class="uml-msg left dashed" style="grid-column: 1 / 2; grid-row: 9;">8. Feedback visual de sucesso</div>
-                    </div>
+
+                    <div class="sequence-wrap" data-diagram="api"></div>
                 </div>
 
-                <div id="flow-automate" class="uml-diagram">
+                <div id="flow-syntex" class="diagram-panel">
+
                     <div class="uml-description error">
-                        <i class="fa-solid fa-triangle-exclamation text-danger"></i> <strong>Motivo do Descarte:</strong> Exige criar "Pastas Lixo" (Dropzones). O gatilho do Automate é baseado em pooling, gerando atrasos de até 5 minutos na rede.
+                        <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+                        <strong>Syntex:</strong>
+                        o arquivo entra primeiro no SharePoint e depois é interpretado pelo serviço Microsoft,
+                        com cobrança por página/processamento.
                     </div>
-                    <div class="uml-grid cols-5">
-                        <div class="uml-actor">Usuário</div><div class="uml-actor">Back-End</div><div class="uml-actor">Dropzone (SP)</div><div class="uml-actor text-danger">Automate</div><div class="uml-actor">Pasta Final (SP)</div>
-                        
-                        <div class="uml-msg right" style="grid-column: 1 / 2; grid-row: 2;">1. Upload do Arquivo</div>
-                        <div class="uml-msg right" style="grid-column: 2 / 3; grid-row: 3;">2. Upload oculto (Cru)</div>
-                        <div class="uml-msg right text-danger" style="grid-column: 3 / 4; grid-row: 4;"><i class="fa-solid fa-bolt"></i> 3. Gatilho de Novo Arquivo</div>
-                        <div class="uml-msg right" style="grid-column: 4 / 5; grid-row: 5;">4. Lê metadados, renomeia e move</div>
-                        <div class="uml-msg left dashed" style="grid-column: 2 / 5; grid-row: 6;">5. Confirmação demorada...</div>
-                    </div>
+
+                    <div class="sequence-wrap" data-diagram="syntex"></div>
                 </div>
 
-                <div id="flow-syntex" class="uml-diagram">
+                <div id="flow-automate" class="diagram-panel">
+
                     <div class="uml-description error">
-                        <i class="fa-solid fa-triangle-exclamation text-danger"></i> <strong>Motivo do Descarte:</strong> Custo abusivo de R$ 825,00/mês. Lock-in tecnológico severo com a infraestrutura da Microsoft.
+                        <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+                        <strong>Automate:</strong>
+                        funciona como esteira posterior ao upload, mas depende de gatilho e pastas intermediárias,
+                        deixando a demo menos imediata.
                     </div>
-                    <div class="uml-grid cols-4">
-                        <div class="uml-actor">Usuário</div><div class="uml-actor">Back-End</div><div class="uml-actor text-danger">MS Syntex</div><div class="uml-actor">SharePoint</div>
-                        
-                        <div class="uml-msg right" style="grid-column: 1 / 2; grid-row: 2;">1. Upload do Arquivo</div>
-                        <div class="uml-msg right" style="grid-column: 2 / 4; grid-row: 3;">2. Upload do arquivo cru</div>
-                        <div class="uml-msg left text-danger" style="grid-column: 3 / 4; grid-row: 4;">3. Aciona IA interna</div>
-                        <div class="uml-msg right text-danger" style="grid-column: 3 / 4; grid-row: 5;">4. Analisa e extrai dados (Cobrança)</div>
-                        <div class="uml-msg self" style="grid-column: 4 / 5; grid-row: 6;">5. Atualiza colunas no banco de dados</div>
-                    </div>
+
+                    <div class="sequence-wrap" data-diagram="automate"></div>
                 </div>
 
             </div>
+
         </section>
+
     </main>
 
     <script src="assets/js/upload_ai.js"></script>
