@@ -1,45 +1,152 @@
 const demoDocs = [
     {
         id: 1,
-        originalName: "arquivo_enviado.xml",
-        finalName: "NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.xml",
+        originalName: "arquivo.pdf",
+        finalName: "NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.pdf",
         documentType: "Nota Fiscal",
         client: "Empresa Exemplo",
         extractedDate: "2026-05-06",
         folder: "/Financeiro/Notas Fiscais/2026",
         department: "Financeiro",
-        tags: ["nota fiscal", "compra", "xml", "financeiro"],
-        extractedText: "nota fiscal compra fornecedor empresa exemplo valor imposto financeiro",
-        reason: "A API IA identificou campos típicos de nota fiscal: fornecedor, valor, imposto e data de emissão.",
+        tags: ["nota fiscal", "financeiro", "imposto"],
+        extractedText: "nota fiscal fornecedor impostos",
+        reason: "A API IA identificou campos fiscais e financeiros.",
         date: "Hoje"
     },
+
     {
         id: 2,
-        originalName: "arquivo_enviado.pdf",
+        originalName: "arquivo.pdf",
         finalName: "CONTRATO_PRESTACAO_SERVICOS_EMPRESA_ALFA_2026-04-18.pdf",
         documentType: "Contrato",
         client: "Empresa Alfa",
         extractedDate: "2026-04-18",
-        folder: "/Jurídico/Contratos/Prestadores",
+        folder: "/Jurídico/Contratos/2026",
         department: "Jurídico",
-        tags: ["contrato", "prestador", "jurídico", "assinatura"],
-        extractedText: "contrato prestação serviços cláusulas assinatura empresa alfa jurídico",
-        reason: "A API IA identificou estrutura contratual, partes envolvidas, cláusulas e assinatura.",
+        tags: ["contrato", "jurídico", "assinatura"],
+        extractedText: "clausulas assinatura prestação",
+        reason: "A API IA reconheceu estrutura contratual.",
         date: "Ontem"
     },
+
     {
         id: 3,
-        originalName: "arquivo_enviado.zip",
-        finalName: "CURRICULO_ANALISTA_SUPORTE_CANDIDATO_2026-03-11.zip",
+        originalName: "arquivo.docx",
+        finalName: "CURRICULO_ANALISTA_SUPORTE_JOAO_SILVA_2026-03-11.docx",
         documentType: "Currículo",
-        client: "Candidato",
+        client: "João Silva",
         extractedDate: "2026-03-11",
-        folder: "/Recursos Humanos/Recrutamento",
+        folder: "/Recursos Humanos/Recrutamento/2026",
         department: "Recursos Humanos",
-        tags: ["currículo", "recrutamento", "rh", "candidato"],
-        extractedText: "curriculo candidato analista suporte recrutamento recursos humanos",
-        reason: "A API IA reconheceu informações de candidato, cargo e processo seletivo.",
+        tags: ["currículo", "rh", "recrutamento"],
+        extractedText: "analista suporte experiência",
+        reason: "A API IA identificou perfil profissional.",
         date: "Esta semana"
+    },
+
+    {
+        id: 4,
+        originalName: "arquivo.xml",
+        finalName: "PEDIDO_COMPRA_CLIENTE_BETA_2026-05-01.xml",
+        documentType: "Pedido",
+        client: "Cliente Beta",
+        extractedDate: "2026-05-01",
+        folder: "/Logística/Pedidos/2026",
+        department: "Logística",
+        tags: ["pedido", "estoque", "logística"],
+        extractedText: "pedido entrega estoque",
+        reason: "A API IA identificou informações operacionais.",
+        date: "Hoje"
+    },
+
+    {
+        id: 5,
+        originalName: "arquivo.pdf",
+        finalName: "RELATORIO_FINANCEIRO_Q1_2026.pdf",
+        documentType: "Relatório Financeiro",
+        client: "Diretoria Financeira",
+        extractedDate: "2026-01-12",
+        folder: "/Financeiro/Relatorios/2026",
+        department: "Financeiro",
+        tags: ["relatório", "financeiro", "q1"],
+        extractedText: "receita despesas balanço",
+        reason: "A API IA reconheceu indicadores financeiros.",
+        date: "2 semanas atrás"
+    },
+
+    {
+        id: 6,
+        originalName: "arquivo.docx",
+        finalName: "TERMO_ADITIVO_EMPRESA_DELTA_2026-02-03.docx",
+        documentType: "Termo Aditivo",
+        client: "Empresa Delta",
+        extractedDate: "2026-02-03",
+        folder: "/Jurídico/Aditivos/2026",
+        department: "Jurídico",
+        tags: ["aditivo", "jurídico", "contrato"],
+        extractedText: "aditivo contratual revisão",
+        reason: "A API IA identificou alterações contratuais.",
+        date: "3 dias atrás"
+    },
+
+    {
+        id: 7,
+        originalName: "arquivo.xlsx",
+        finalName: "PLANILHA_ESTOQUE_OPERACIONAL_2026-05-02.xlsx",
+        documentType: "Planilha Operacional",
+        client: "Centro Logístico",
+        extractedDate: "2026-05-02",
+        folder: "/Logística/Estoque/2026",
+        department: "Logística",
+        tags: ["estoque", "planilha", "logística"],
+        extractedText: "entrada saída produtos",
+        reason: "A API IA identificou estrutura operacional de estoque.",
+        date: "Hoje"
+    },
+
+    {
+        id: 8,
+        originalName: "arquivo.pdf",
+        finalName: "HOLERITE_COLABORADOR_MARCO_2026-03-30.pdf",
+        documentType: "Holerite",
+        client: "Colaborador Interno",
+        extractedDate: "2026-03-30",
+        folder: "/Recursos Humanos/Folha/2026",
+        department: "Recursos Humanos",
+        tags: ["holerite", "folha", "rh"],
+        extractedText: "salário benefícios desconto",
+        reason: "A API IA identificou informações de folha de pagamento.",
+        date: "Ontem"
+    },
+
+    {
+        id: 9,
+        originalName: "arquivo.pdf",
+        finalName: "COMPROVANTE_PAGAMENTO_FORNECEDOR_SIGMA_2026-04-09.pdf",
+        documentType: "Comprovante",
+        client: "Fornecedor Sigma",
+        extractedDate: "2026-04-09",
+        folder: "/Financeiro/Pagamentos/2026",
+        department: "Financeiro",
+        tags: ["pagamento", "financeiro", "comprovante"],
+        extractedText: "transferência bancária comprovante",
+        reason: "A API IA reconheceu dados bancários e pagamento.",
+        date: "Hoje"
+    },
+
+    {
+        id: 10,
+        originalName: "arquivo.docx",
+        finalName: "ATA_REUNIAO_DIRETORIA_2026-05-04.docx",
+        documentType: "Ata de Reunião",
+        client: "Diretoria",
+        extractedDate: "2026-05-04",
+        folder: "/Corporativo/Atas/2026",
+        department: "Corporativo",
+        tags: ["ata", "diretoria", "reunião"],
+        extractedText: "reunião diretoria decisões",
+        reason: "A API IA identificou pauta e estrutura de reunião.",
+        date: "Hoje"
     }
 ];
 
@@ -291,84 +398,303 @@ function analyzeDocument(file, extractedText = "") {
 }
 
 function detectDocumentProfile(context, hint, extension) {
-    if (
-        hint === "nf" ||
-        context.includes("nota fiscal") ||
-        context.includes("nfe") ||
-        context.includes("imposto") ||
-        context.includes("fatura") ||
-        context.includes("valor")
-    ) {
-        return {
-            documentType: "Nota Fiscal",
-            client: extractEntity(context) || "Fornecedor Identificado",
-            folder: "/Financeiro/Notas Fiscais/2026",
-            department: "Financeiro",
-            tags: ["nota fiscal", "fornecedor", "financeiro", extension],
-            reason: "A API IA identificou campos financeiros, fornecedor, valores e termos fiscais."
-        };
-    }
 
-    if (
-        hint === "contrato" ||
-        context.includes("contrato") ||
-        context.includes("cláusula") ||
-        context.includes("clausula") ||
-        context.includes("assinatura") ||
-        context.includes("prestação")
-    ) {
-        return {
-            documentType: "Contrato",
-            client: extractEntity(context) || "Parte Contratual",
-            folder: "/Jurídico/Contratos/2026",
-            department: "Jurídico",
-            tags: ["contrato", "jurídico", "assinatura", extension],
-            reason: "A API IA identificou estrutura contratual, partes envolvidas e elementos jurídicos."
-        };
-    }
+    const profiles = [
 
-    if (
-        hint === "curriculo" ||
-        context.includes("curriculo") ||
-        context.includes("currículo") ||
-        context.includes("candidato") ||
-        context.includes("experiência") ||
-        context.includes("recrutamento")
-    ) {
-        return {
-            documentType: "Currículo",
-            client: extractEntity(context) || "Candidato",
-            folder: "/Recursos Humanos/Recrutamento/2026",
-            department: "Recursos Humanos",
-            tags: ["currículo", "recrutamento", "rh", extension],
-            reason: "A API IA reconheceu dados de candidato, perfil profissional e recrutamento."
-        };
-    }
+        {
+            keywords: [
+                "nota fiscal",
+                "nfe",
+                "imposto",
+                "fatura",
+                "financeiro",
+                "boleto",
+                "pagamento",
+                "xml"
+            ],
 
-    if (
-        hint === "pedido" ||
-        context.includes("pedido") ||
-        context.includes("entrega") ||
-        context.includes("estoque") ||
-        context.includes("transportadora") ||
-        context.includes("remessa")
-    ) {
-        return {
-            documentType: "Pedido",
-            client: extractEntity(context) || "Cliente Operacional",
-            folder: "/Logística/Pedidos/2026",
-            department: "Logística",
-            tags: ["pedido", "logística", "operação", extension],
-            reason: "A API IA identificou termos de pedido, entrega, transporte ou operação logística."
-        };
+            data: {
+                documentType: "Nota Fiscal",
+                client: extractEntity(context) || "Fornecedor Corporativo",
+                folder: "/Financeiro/Notas Fiscais/2026",
+                department: "Financeiro",
+
+                tags: [
+                    "financeiro",
+                    "nota fiscal",
+                    "fiscal",
+                    "impostos",
+                    "fornecedor",
+                    "pagamentos",
+                    extension
+                ],
+
+                reason: "A API IA identificou termos financeiros, tributários e estrutura típica de nota fiscal."
+            }
+        },
+
+        {
+            keywords: [
+                "contrato",
+                "assinatura",
+                "clausula",
+                "cláusula",
+                "juridico",
+                "jurídico",
+                "prestação",
+                "termo aditivo"
+            ],
+
+            data: {
+                documentType: "Contrato",
+                client: extractEntity(context) || "Parte Contratual",
+                folder: "/Jurídico/Contratos/2026",
+                department: "Jurídico",
+
+                tags: [
+                    "jurídico",
+                    "contrato",
+                    "assinatura",
+                    "compliance",
+                    "cláusulas",
+                    extension
+                ],
+
+                reason: "A API IA reconheceu estrutura jurídica, cláusulas contratuais e partes envolvidas."
+            }
+        },
+
+        {
+            keywords: [
+                "curriculo",
+                "currículo",
+                "candidato",
+                "vaga",
+                "recrutamento",
+                "experiência",
+                "entrevista"
+            ],
+
+            data: {
+                documentType: "Currículo",
+                client: extractEntity(context) || "Candidato",
+                folder: "/RH/Recrutamento/2026",
+                department: "Recursos Humanos",
+
+                tags: [
+                    "rh",
+                    "currículo",
+                    "recrutamento",
+                    "seleção",
+                    "colaborador",
+                    extension
+                ],
+
+                reason: "A API IA detectou perfil profissional, recrutamento e informações de candidato."
+            }
+        },
+
+        {
+            keywords: [
+                "pedido",
+                "entrega",
+                "estoque",
+                "transportadora",
+                "remessa",
+                "logistica",
+                "logística"
+            ],
+
+            data: {
+                documentType: "Pedido Operacional",
+                client: extractEntity(context) || "Cliente Operacional",
+                folder: "/Logística/Pedidos/2026",
+                department: "Logística",
+
+                tags: [
+                    "logística",
+                    "estoque",
+                    "pedido",
+                    "transporte",
+                    "operação",
+                    extension
+                ],
+
+                reason: "A API IA identificou informações operacionais relacionadas à logística."
+            }
+        },
+
+        {
+            keywords: [
+                "holerite",
+                "folha",
+                "beneficio",
+                "benefício",
+                "salario",
+                "salário",
+                "funcionario"
+            ],
+
+            data: {
+                documentType: "Folha de Pagamento",
+                client: "Colaborador Interno",
+                folder: "/RH/Folha de Pagamento/2026",
+                department: "Recursos Humanos",
+
+                tags: [
+                    "rh",
+                    "folha",
+                    "holerite",
+                    "benefícios",
+                    "salário",
+                    extension
+                ],
+
+                reason: "A API IA encontrou indicadores de folha salarial e benefícios."
+            }
+        },
+
+        {
+            keywords: [
+                "relatorio",
+                "relatório",
+                "indicadores",
+                "dashboard",
+                "receita",
+                "despesas",
+                "balanço"
+            ],
+
+            data: {
+                documentType: "Relatório Executivo",
+                client: "Diretoria Corporativa",
+                folder: "/Corporativo/Relatorios/2026",
+                department: "Corporativo",
+
+                tags: [
+                    "relatório",
+                    "executivo",
+                    "indicadores",
+                    "dashboard",
+                    "gestão",
+                    extension
+                ],
+
+                reason: "A API IA reconheceu estrutura analítica e indicadores corporativos."
+            }
+        },
+
+        {
+            keywords: [
+                "ata",
+                "reunião",
+                "pauta",
+                "diretoria",
+                "decisão"
+            ],
+
+            data: {
+                documentType: "Ata de Reunião",
+                client: "Diretoria",
+                folder: "/Corporativo/Atas/2026",
+                department: "Corporativo",
+
+                tags: [
+                    "ata",
+                    "reunião",
+                    "corporativo",
+                    "diretoria",
+                    extension
+                ],
+
+                reason: "A API IA identificou padrão documental de reuniões corporativas."
+            }
+        },
+
+        {
+            keywords: [
+                "laudo",
+                "medico",
+                "médico",
+                "clinico",
+                "clínico",
+                "exame"
+            ],
+
+            data: {
+                documentType: "Laudo Médico",
+                client: "Colaborador",
+                folder: "/RH/Documentos Médicos/2026",
+                department: "Saúde Ocupacional",
+
+                tags: [
+                    "laudo",
+                    "saúde",
+                    "médico",
+                    "ocupacional",
+                    extension
+                ],
+
+                reason: "A API IA identificou conteúdo médico e documentação ocupacional."
+            }
+        },
+
+        {
+            keywords: [
+                "compliance",
+                "auditoria",
+                "lgpd",
+                "segurança",
+                "risco"
+            ],
+
+            data: {
+                documentType: "Compliance",
+                client: "Área de Governança",
+                folder: "/Compliance/Auditorias/2026",
+                department: "Compliance",
+
+                tags: [
+                    "compliance",
+                    "auditoria",
+                    "governança",
+                    "segurança",
+                    "lgpd",
+                    extension
+                ],
+
+                reason: "A API IA reconheceu terminologias relacionadas à governança e compliance."
+            }
+        }
+
+    ];
+
+    for (const profile of profiles) {
+
+        const matched = profile.keywords.some(keyword =>
+            context.includes(keyword)
+        );
+
+        if (matched) {
+            return profile.data;
+        }
     }
 
     return {
         documentType: "Documento Corporativo",
         client: "Entidade Identificada",
+
         folder: "/Documentos Gerais/Triagem Inteligente",
+
         department: "Documentos Gerais",
-        tags: ["documento corporativo", "triagem", extension],
+
+        tags: [
+            "documento",
+            "triagem",
+            "corporativo",
+            extension
+        ],
+
         reason: "A API IA não encontrou categoria específica suficiente e encaminhou o arquivo para triagem inteligente."
     };
 }
@@ -854,3 +1180,55 @@ function buildSequenceSvg(config) {
         </svg>
     `;
 } 
+
+function buildFakeDocumentPreview(doc) {
+    return `
+        <div class="fake-document-preview">
+            <div class="fake-doc-header">
+                <div>
+                    <div class="fake-doc-company">SieShare Intelligence</div>
+                    <div class="fake-doc-type">${doc.documentType}</div>
+                </div>
+
+                <div class="fake-doc-badge">${doc.department}</div>
+            </div>
+
+            <div class="fake-doc-title">${doc.finalName}</div>
+
+            <div class="fake-doc-grid">
+                <div class="fake-doc-field">
+                    <span>Cliente / Entidade</span>
+                    <strong>${doc.client}</strong>
+                </div>
+
+                <div class="fake-doc-field">
+                    <span>Data identificada</span>
+                    <strong>${doc.extractedDate}</strong>
+                </div>
+
+                <div class="fake-doc-field">
+                    <span>Tipo de documento</span>
+                    <strong>${doc.documentType}</strong>
+                </div>
+
+                <div class="fake-doc-field">
+                    <span>Pasta de destino</span>
+                    <strong>${doc.folder}</strong>
+                </div>
+            </div>
+
+            <div class="fake-doc-lines">
+                <div class="fake-line w-90"></div>
+                <div class="fake-line w-75"></div>
+                <div class="fake-line w-60"></div>
+                <div class="fake-line w-90"></div>
+                <div class="fake-line w-45"></div>
+            </div>
+
+            <div class="fake-doc-footer">
+                <span>Prévia demonstrativa gerada para apresentação</span>
+                <span>Metadados extraídos pela API IA</span>
+            </div>
+        </div>
+    `;
+}
