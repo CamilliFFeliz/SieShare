@@ -67,6 +67,7 @@
     </header>
 
     <main class="main-canvas">
+
         <section id="view-presentation" class="view-panel active">
             <div class="hero-card">
                 <div class="hero-copy">
@@ -120,77 +121,89 @@
                             <span>SharePoint</span>
                         </div>
 
-                        <div class="mini-json">{
-                            "nomeDocumento": "NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.pdf",
-                            "nomeOriginal": "NF_45877.pdf",
-                            "tipo": "Nota Fiscal",
-                            "cliente": "Empresa Exemplo",
-                            "dataCriacao": "2026-04-30",
-                            "dataModificacao": "2026-05-06",
-                            "ultimoUsuario": "Carlos Eduardo",
-                            "pasta": "/Financeiro/Notas Fiscais/2026"
-                            }</div>
-
-                        <div class="sharepoint-preview">
-                            <div class="sharepoint-preview-header">
-                                <div>
-                                    <span class="sharepoint-label">Simulação SharePoint</span>
-                                    <h3>Colunas GED geradas a partir do JSON</h3>
-                                    <p>
-                                        Os dados retornados pela API IA são convertidos em metadados no SharePoint,
-                                        permitindo padronização, rastreabilidade e pesquisa inteligente.
-                                    </p>
-                                </div>
-
-                                <span class="sharepoint-status">
-                                    <i class="fa-solid fa-check"></i>
-                                    Metadados aplicados
-                                </span>
+                        <div class="smart-preview-card">
+                        
+                            <div class="smart-preview-actions">
+                                <button class="magic-toggle active" id="btn-json-view" onclick="toggleSmartPreview('json')">
+                                    <i class="fa-solid fa-code"></i>
+                                    Ver JSON
+                                </button>
+                        
+                                <button class="magic-toggle" id="btn-sharepoint-view" onclick="toggleSmartPreview('sharepoint')">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    Simular SharePoint
+                                </button>
                             </div>
-
-                            <div class="sharepoint-scroll">
-                                <div class="sharepoint-table">
-                                    <div class="sp-row sp-head">
-                                        <div>Nome documento</div>
-                                        <div>Nome Original</div>
-                                        <div>Tipo</div>
-                                        <div>Cliente</div>
-                                        <div>Data Criação</div>
-                                        <div>Data Modificação</div>
-                                        <div>Últ. Usuário</div>
-                                        <div>Pasta</div>
+                        
+                            <div id="preview-json" class="preview-mode active">
+                                <div class="mini-json">{
+                                    "nomeDocumento": "NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.pdf",
+                                    "nomeOriginal": "NF_45877.pdf",
+                                    "tipo": "Nota Fiscal",
+                                    "cliente": "Empresa Exemplo",
+                                    "dataCriacao": "2026-04-30",
+                                    "dataModificacao": "2026-05-06",
+                                    "ultimoUsuario": "Carlos Eduardo",
+                                    "departamento": "Fiscal",
+                                    "pasta": "/Documentos Fiscal/Nota_Fiscal/2026/05"
+                                    }</div>
+                            </div>
+                        
+                            <div id="preview-sharepoint" class="preview-mode">
+                                <div class="sp-compact-card">
+                                    <div class="sp-compact-header">
+                                        <div>
+                                            <span>Simulação SharePoint</span>
+                                            <strong>Metadados aplicados ao documento</strong>
+                                        </div>
+                        
+                                        <i class="fa-solid fa-check"></i>
                                     </div>
-
-                                    <div class="sp-row">
-                                        <div class="sp-file-name">
-                                            <i class="fa-regular fa-file-pdf"></i>
-                                            <span>NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.pdf</span>
-                                        </div>
-
-                                        <div>NF_45877.pdf</div>
-
+                        
+                                    <div class="sp-meta-grid">
                                         <div>
-                                            <span class="sp-pill">Nota Fiscal</span>
+                                            <small>Nome documento</small>
+                                            <strong>NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.pdf</strong>
                                         </div>
-
+                        
                                         <div>
-                                            <span class="sp-pill">Empresa Exemplo</span>
+                                            <small>Nome Original</small>
+                                            <strong>NF_45877.pdf</strong>
                                         </div>
-
-                                        <div>30/04/2026</div>
-
-                                        <div>06/05/2026</div>
-
+                        
                                         <div>
-                                            <span class="sp-pill user">Carlos Eduardo</span>
+                                            <small>Tipo</small>
+                                            <strong>Nota Fiscal</strong>
                                         </div>
-
-                                        <div class="sp-folder">
-                                            /Financeiro/Notas Fiscais/2026
+                        
+                                        <div>
+                                            <small>Cliente</small>
+                                            <strong>Empresa Exemplo</strong>
+                                        </div>
+                        
+                                        <div>
+                                            <small>Data Criação</small>
+                                            <strong>30/04/2026</strong>
+                                        </div>
+                        
+                                        <div>
+                                            <small>Data Modificação</small>
+                                            <strong>06/05/2026</strong>
+                                        </div>
+                        
+                                        <div>
+                                            <small>Últ. Usuário</small>
+                                            <strong>Carlos Eduardo</strong>
+                                        </div>
+                        
+                                        <div class="sp-folder-box">
+                                            <small>Pasta SharePoint</small>
+                                            <strong>/Documentos Fiscal/Nota_Fiscal/2026/05</strong>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        
                         </div>
                     </div>
                 </div>

@@ -684,7 +684,7 @@ function detectDocumentProfile(context, hint, extension) {
         documentType: "Documento Corporativo",
         client: "Entidade Identificada",
 
-        folder: "/Documentos Gerais/Triagem Inteligente",
+        folder: "/Documentos Fiscal/Nota_Fiscal/2026/05",
 
         department: "Documentos Gerais",
 
@@ -695,7 +695,7 @@ function detectDocumentProfile(context, hint, extension) {
             extension
         ],
 
-        reason: "A API IA não encontrou categoria específica suficiente e encaminhou o arquivo para triagem inteligente."
+        reason: "A API IA identificou padrões fiscais no documento, como número de nota, data de emissão, valores e entidade vinculada. Por isso, o arquivo foi classificado como Nota Fiscal e direcionado automaticamente para o repositório fiscal do período correspondente."
     };
 }
 
@@ -1216,4 +1216,18 @@ function buildFakeDocumentPreview(doc) {
             </div>
         </div>
     `;
+}
+function toggleSmartPreview(mode) {
+    const jsonView = document.getElementById("preview-json");
+    const sharepointView = document.getElementById("preview-sharepoint");
+    const jsonBtn = document.getElementById("btn-json-view");
+    const sharepointBtn = document.getElementById("btn-sharepoint-view");
+
+    if (!jsonView || !sharepointView || !jsonBtn || !sharepointBtn) return;
+
+    jsonView.classList.toggle("active", mode === "json");
+    sharepointView.classList.toggle("active", mode === "sharepoint");
+
+    jsonBtn.classList.toggle("active", mode === "json");
+    sharepointBtn.classList.toggle("active", mode === "sharepoint");
 }

@@ -1917,3 +1917,123 @@ button {
         min-width: 920px;
     }
 }
+/* Alternância JSON / SharePoint */
+
+.smart-preview-card {
+    display: grid;
+    gap: 16px;
+}
+
+.smart-preview-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.magic-toggle {
+    border: 1px solid rgba(56, 189, 248, 0.24);
+    background: rgba(15, 23, 42, 0.78);
+    color: #bae6fd;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.22s ease;
+}
+
+.magic-toggle:hover,
+.magic-toggle.active {
+    color: #fff;
+    background: linear-gradient(135deg, #2563eb, #0ea5e9);
+    border-color: rgba(56, 189, 248, 0.75);
+    box-shadow: 0 14px 34px rgba(14, 165, 233, 0.22);
+}
+
+.preview-mode {
+    display: none;
+}
+
+.preview-mode.active {
+    display: block;
+}
+
+.sp-compact-card {
+    background: #f8fafc;
+    color: #0f172a;
+    border-radius: 20px;
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+}
+
+.sp-compact-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.sp-compact-header span {
+    display: block;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+}
+
+.sp-compact-header strong {
+    font-size: 17px;
+}
+
+.sp-compact-header i {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.sp-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.sp-meta-grid div {
+    padding: 12px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    min-width: 0;
+}
+
+.sp-meta-grid small {
+    display: block;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.sp-meta-grid strong {
+    display: block;
+    color: #0f172a;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.sp-folder-box {
+    grid-column: 1 / -1;
+}
+
+.sp-folder-box strong {
+    color: #2563eb;
+}
