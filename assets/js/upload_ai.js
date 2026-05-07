@@ -981,6 +981,7 @@ function openDocPreview(doc) {
     };
 
     content.innerHTML = `
+        ${buildFakeDocumentPreview(doc)}
         <div class="form-grid">
             <div class="col-full">
                 <label>Arquivo padronizado pela IA</label>
