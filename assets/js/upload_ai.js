@@ -109,6 +109,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDropzone();
 });
 
+
+function switchWorkspaceTab(tabId) {
+    document.querySelectorAll('.workspace-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+    });
+    document.querySelectorAll('.workspace-pane').forEach(pane => pane.classList.remove('active'));
+    const target = document.getElementById(`tab-${tabId}`);
+    if (target) target.classList.add('active');
+    if (tabId === 'uploads') loadRepositoryList();
+}
+
 // Navegação Superior
 function switchView(viewId) {
     document.querySelectorAll('.view-panel, .nav-tab').forEach(el => el.classList.remove('active'));
@@ -233,7 +244,8 @@ function syncSharePoint() {
     setTimeout(() => {
         if (currentTempDoc) {
             const novoDoc = saveToDB(currentTempDoc);
-            loadRepositoryList(); // Recarrega a lista lateral na mesma hora!
+            loadRepositoryList();
+            switchWorkspaceTab('uploads'); // Mostra os últimos uploads em uma aba separada
 
             // Abre o doc salvo de brinde para o usuário ver
             setTimeout(() => openDocPreview(novoDoc.id), 300);
