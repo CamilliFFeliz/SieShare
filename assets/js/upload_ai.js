@@ -1,38 +1,44 @@
 const demoDocs = [
     {
         id: 1,
-        originalName: "NF_COMPRA_NOTEBOOKS_MAIO.xml",
-        normalizedName: "FIN_NF_COMPRA_NOTEBOOKS_MAIO_2026.xml",
+        originalName: "arquivo_enviado.xml",
+        finalName: "NOTA_FISCAL_EMPRESA_EXEMPLO_2026-05-06.xml",
+        documentType: "Nota Fiscal",
+        client: "Empresa Exemplo",
+        extractedDate: "2026-05-06",
         folder: "/Financeiro/Notas Fiscais/2026",
         department: "Financeiro",
-        confidence: 99,
         tags: ["nota fiscal", "compra", "xml", "financeiro"],
-        extractedText: "nota fiscal compra notebooks maio fornecedor valor imposto financeiro",
-        reason: "O nome e a extensão XML indicam nota fiscal eletrônica. Palavras como NF, compra e XML apontam para Financeiro.",
+        extractedText: "nota fiscal compra fornecedor empresa exemplo valor imposto financeiro",
+        reason: "A API IA identificou campos típicos de nota fiscal: fornecedor, valor, imposto e data de emissão.",
         date: "Hoje"
     },
     {
         id: 2,
-        originalName: "CONTRATO_PRESTADOR_TI.pdf",
-        normalizedName: "JUR_CONTRATO_PRESTADOR_TI_2026.pdf",
+        originalName: "arquivo_enviado.pdf",
+        finalName: "CONTRATO_PRESTACAO_SERVICOS_EMPRESA_ALFA_2026-04-18.pdf",
+        documentType: "Contrato",
+        client: "Empresa Alfa",
+        extractedDate: "2026-04-18",
         folder: "/Jurídico/Contratos/Prestadores",
         department: "Jurídico",
-        confidence: 96,
-        tags: ["contrato", "prestador", "jurídico", "ti"],
-        extractedText: "contrato prestação serviços tecnologia cláusulas assinatura jurídico",
-        reason: "O termo contrato indica documento jurídico. Prestador TI sugere contrato de serviço terceirizado.",
+        tags: ["contrato", "prestador", "jurídico", "assinatura"],
+        extractedText: "contrato prestação serviços cláusulas assinatura empresa alfa jurídico",
+        reason: "A API IA identificou estrutura contratual, partes envolvidas, cláusulas e assinatura.",
         date: "Ontem"
     },
     {
         id: 3,
-        originalName: "CURRICULOS_ANALISTA_SUPORTE.zip",
-        normalizedName: "RH_CURRICULOS_ANALISTA_SUPORTE_2026.zip",
+        originalName: "arquivo_enviado.zip",
+        finalName: "CURRICULO_ANALISTA_SUPORTE_CANDIDATO_2026-03-11.zip",
+        documentType: "Currículo",
+        client: "Candidato",
+        extractedDate: "2026-03-11",
         folder: "/Recursos Humanos/Recrutamento",
         department: "Recursos Humanos",
-        confidence: 94,
-        tags: ["currículo", "recrutamento", "rh", "candidatos"],
-        extractedText: "curriculos analista suporte recrutamento seleção candidatos recursos humanos",
-        reason: "O nome contém currículos e cargo. Isso indica material de recrutamento para RH.",
+        tags: ["currículo", "recrutamento", "rh", "candidato"],
+        extractedText: "curriculo candidato analista suporte recrutamento recursos humanos",
+        reason: "A API IA reconheceu informações de candidato, cargo e processo seletivo.",
         date: "Esta semana"
     }
 ];
@@ -166,29 +172,26 @@ async function processFile(file) {
 
     logs.innerHTML = "";
 
-    await typeLog("Recebendo arquivo no navegador...", logs);
-    await typeLog(`Arquivo detectado: ${file.name}`, logs);
-    await typeLog("Verificando extensão, nome e contexto informado...", logs);
+    await typeLog("Recebendo arquivo na aplicação web...", logs);
+    await typeLog("Enviando documento para análise da API IA...", logs);
 
     const extractedText = await extractReadableText(file);
 
     if (extractedText) {
-        await typeLog("Conteúdo textual parcial encontrado e analisado.", logs);
+        await typeLog("Texto parcial extraído no navegador para simular leitura da API IA.", logs);
     } else {
-        await typeLog("Conteúdo não legível diretamente. Usando nome, extensão e contexto.", logs);
+        await typeLog("Arquivo binário detectado. Simulando retorno estruturado da API IA.", logs);
     }
 
-    await typeLog("Calculando departamento, pasta e tags prováveis...", logs);
-    await typeLog("Gerando metadados compatíveis com SharePoint Graph API...", logs);
+    await typeLog("API IA retornou tipo documental, cliente, data e tags em JSON.", logs);
+    await typeLog("Montando nome final sem copiar o nome original do arquivo...", logs);
+    await typeLog("Preparando payload para Microsoft Graph API...", logs);
 
     const intelligence = analyzeDocument(file, extractedText);
 
     currentDoc = intelligence;
 
-    uploadedDocs.unshift(intelligence);
-
     fillMetadata(intelligence);
-    renderRecentDocs();
 
     await pause(400);
 
@@ -263,78 +266,184 @@ function extractReadableText(file) {
 
 function analyzeDocument(file, extractedText = "") {
     const hint = document.getElementById("ai-hint")?.value || "auto";
+    const extension = getExtension(file.name);
+    const context = `${extractedText} ${hint}`.toLowerCase();
 
-    const originalName = file.name;
-    const lowerName = originalName.toLowerCase();
-    const extension = getExtension(originalName);
-    const fullContext = `${lowerName} ${extractedText} ${hint}`.toLowerCase();
+    let profile = detectDocumentProfile(context, hint, extension);
 
-    const scores = {
-        "Financeiro": scoreContext(fullContext, [
-            "nf", "nota fiscal", "invoice", "boleto", "pagamento", "compra",
-            "fatura", "financeiro", "valor", "imposto", "xml", "nfe"
-        ]),
-        "Recursos Humanos": scoreContext(fullContext, [
-            "rh", "curriculo", "currículo", "colaborador", "funcionario",
-            "funcionário", "ferias", "férias", "recrutamento", "candidato",
-            "folha", "beneficio", "benefício"
-        ]),
-        "Jurídico": scoreContext(fullContext, [
-            "contrato", "juridico", "jurídico", "clausula", "cláusula",
-            "assinatura", "termo", "aditivo", "prestador", "acordo"
-        ]),
-        "Logística": scoreContext(fullContext, [
-            "logistica", "logística", "entrega", "romaneio", "estoque",
-            "transportadora", "frete", "pedido", "remessa", "cte"
-        ])
-    };
-
-    if (hint === "fin") scores["Financeiro"] += 35;
-    if (hint === "rh") scores["Recursos Humanos"] += 35;
-    if (hint === "jur") scores["Jurídico"] += 35;
-    if (hint === "log") scores["Logística"] += 35;
-
-    let department = "Documentos Gerais";
-    let bestScore = 0;
-
-    Object.entries(scores).forEach(([name, score]) => {
-        if (score > bestScore) {
-            department = name;
-            bestScore = score;
-        }
-    });
-
-    const confidence = Math.min(99, Math.max(72, 72 + bestScore));
-
-    const folder = resolveFolder(department, fullContext);
-    const tags = resolveTags(department, fullContext, extension);
-    const normalizedName = normalizeFileName(department, originalName);
-    const reason = buildReason(department, tags, extractedText, extension);
+    const extractedDate = extractDate(context) || getTodayDate();
+    const finalName = buildFinalName(profile.documentType, profile.client, extractedDate, extension);
 
     return {
         id: Date.now(),
-        originalName,
-        normalizedName,
-        folder,
-        department,
-        confidence,
-        tags,
-        extractedText: extractedText || "Conteúdo não extraído nesta demo local.",
-        reason,
+        originalName: file.name,
+        finalName,
+        documentType: profile.documentType,
+        client: profile.client,
+        extractedDate,
+        folder: profile.folder,
+        department: profile.department,
+        tags: profile.tags,
+        extractedText: extractedText || "Conteúdo interpretado pela API IA na versão final da solução.",
+        reason: profile.reason,
         date: "Agora"
     };
 }
 
-function scoreContext(context, keywords) {
-    let score = 0;
+function detectDocumentProfile(context, hint, extension) {
+    if (
+        hint === "nf" ||
+        context.includes("nota fiscal") ||
+        context.includes("nfe") ||
+        context.includes("imposto") ||
+        context.includes("fatura") ||
+        context.includes("valor")
+    ) {
+        return {
+            documentType: "Nota Fiscal",
+            client: extractEntity(context) || "Fornecedor Identificado",
+            folder: "/Financeiro/Notas Fiscais/2026",
+            department: "Financeiro",
+            tags: ["nota fiscal", "fornecedor", "financeiro", extension],
+            reason: "A API IA identificou campos financeiros, fornecedor, valores e termos fiscais."
+        };
+    }
 
-    keywords.forEach(keyword => {
-        if (context.includes(keyword)) {
-            score += 7;
-        }
-    });
+    if (
+        hint === "contrato" ||
+        context.includes("contrato") ||
+        context.includes("cláusula") ||
+        context.includes("clausula") ||
+        context.includes("assinatura") ||
+        context.includes("prestação")
+    ) {
+        return {
+            documentType: "Contrato",
+            client: extractEntity(context) || "Parte Contratual",
+            folder: "/Jurídico/Contratos/2026",
+            department: "Jurídico",
+            tags: ["contrato", "jurídico", "assinatura", extension],
+            reason: "A API IA identificou estrutura contratual, partes envolvidas e elementos jurídicos."
+        };
+    }
 
-    return score;
+    if (
+        hint === "curriculo" ||
+        context.includes("curriculo") ||
+        context.includes("currículo") ||
+        context.includes("candidato") ||
+        context.includes("experiência") ||
+        context.includes("recrutamento")
+    ) {
+        return {
+            documentType: "Currículo",
+            client: extractEntity(context) || "Candidato",
+            folder: "/Recursos Humanos/Recrutamento/2026",
+            department: "Recursos Humanos",
+            tags: ["currículo", "recrutamento", "rh", extension],
+            reason: "A API IA reconheceu dados de candidato, perfil profissional e recrutamento."
+        };
+    }
+
+    if (
+        hint === "pedido" ||
+        context.includes("pedido") ||
+        context.includes("entrega") ||
+        context.includes("estoque") ||
+        context.includes("transportadora") ||
+        context.includes("remessa")
+    ) {
+        return {
+            documentType: "Pedido",
+            client: extractEntity(context) || "Cliente Operacional",
+            folder: "/Logística/Pedidos/2026",
+            department: "Logística",
+            tags: ["pedido", "logística", "operação", extension],
+            reason: "A API IA identificou termos de pedido, entrega, transporte ou operação logística."
+        };
+    }
+
+    return {
+        documentType: "Documento Corporativo",
+        client: "Entidade Identificada",
+        folder: "/Documentos Gerais/Triagem Inteligente",
+        department: "Documentos Gerais",
+        tags: ["documento corporativo", "triagem", extension],
+        reason: "A API IA não encontrou categoria específica suficiente e encaminhou o arquivo para triagem inteligente."
+    };
+}
+
+function extractEntity(context) {
+    const empresaMatch = context.match(/empresa\s+[a-z0-9\s]{2,28}/i);
+    const fornecedorMatch = context.match(/fornecedor\s+[a-z0-9\s]{2,28}/i);
+    const clienteMatch = context.match(/cliente\s+[a-z0-9\s]{2,28}/i);
+
+    const raw =
+        empresaMatch?.[0] ||
+        fornecedorMatch?.[0] ||
+        clienteMatch?.[0] ||
+        "";
+
+    if (!raw) {
+        return "";
+    }
+
+    return toTitleCase(
+        raw
+            .replace("empresa", "")
+            .replace("fornecedor", "")
+            .replace("cliente", "")
+            .trim()
+    );
+}
+
+function extractDate(context) {
+    const iso = context.match(/\b\d{4}-\d{2}-\d{2}\b/);
+
+    if (iso) {
+        return iso[0];
+    }
+
+    const br = context.match(/\b\d{2}\/\d{2}\/\d{4}\b/);
+
+    if (br) {
+        const [day, month, year] = br[0].split("/");
+        return `${year}-${month}-${day}`;
+    }
+
+    return "";
+}
+
+function getTodayDate() {
+    const today = new Date();
+
+    return today.toISOString().slice(0, 10);
+}
+
+function buildFinalName(documentType, client, date, extension) {
+    const cleanType = normalizeSegment(documentType);
+    const cleanClient = normalizeSegment(client);
+    const cleanDate = date || getTodayDate();
+
+    return `${cleanType}_${cleanClient}_${cleanDate}.${extension}`;
+}
+
+function normalizeSegment(value) {
+    return String(value || "DOCUMENTO")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toUpperCase();
+}
+
+function toTitleCase(value) {
+    return String(value)
+        .toLowerCase()
+        .split(" ")
+        .filter(Boolean)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 }
 
 function getExtension(fileName) {
@@ -347,104 +456,13 @@ function getExtension(fileName) {
     return parts.pop().toLowerCase();
 }
 
-function resolveFolder(department, context) {
-    if (department === "Financeiro") {
-        if (context.includes("nf") || context.includes("nota") || context.includes("xml")) {
-            return "/Financeiro/Notas Fiscais/2026";
-        }
-
-        return "/Financeiro/Documentos";
-    }
-
-    if (department === "Recursos Humanos") {
-        if (context.includes("curriculo") || context.includes("currículo") || context.includes("candidato")) {
-            return "/Recursos Humanos/Recrutamento";
-        }
-
-        return "/Recursos Humanos/Colaboradores";
-    }
-
-    if (department === "Jurídico") {
-        if (context.includes("contrato")) {
-            return "/Jurídico/Contratos";
-        }
-
-        return "/Jurídico/Documentos";
-    }
-
-    if (department === "Logística") {
-        return "/Logística/Operações";
-    }
-
-    return "/Documentos Gerais/Triagem";
-}
-
-function resolveTags(department, context, extension) {
-    const tags = [
-        department.toLowerCase(),
-        extension
-    ];
-
-    const semanticTags = [
-        "nota fiscal",
-        "contrato",
-        "currículo",
-        "recrutamento",
-        "compra",
-        "pagamento",
-        "prestador",
-        "logística",
-        "estoque",
-        "assinatura",
-        "xml",
-        "pdf"
-    ];
-
-    semanticTags.forEach(tag => {
-        if (context.includes(tag)) {
-            tags.push(tag);
-        }
-    });
-
-    return [...new Set(tags)].slice(0, 7);
-}
-
-function normalizeFileName(department, originalName) {
-    const extension = getExtension(originalName);
-
-    const nameWithoutExtension = originalName
-        .replace(/\.[^/.]+$/, "")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-zA-Z0-9]+/g, "_")
-        .replace(/^_+|_+$/g, "")
-        .toUpperCase();
-
-    const prefixMap = {
-        "Financeiro": "FIN",
-        "Recursos Humanos": "RH",
-        "Jurídico": "JUR",
-        "Logística": "LOG",
-        "Documentos Gerais": "GERAL"
-    };
-
-    const prefix = prefixMap[department] || "GERAL";
-
-    return `${prefix}_${nameWithoutExtension}_2026.${extension}`;
-}
-
-function buildReason(department, tags, extractedText, extension) {
-    const textSource = extractedText
-        ? "Também foi possível ler parte do conteúdo textual no navegador."
-        : "Como esta demo roda no GitHub Pages, a análise usou principalmente nome, extensão e contexto informado.";
-
-    return `Classificado como ${department} por associação com ${tags.join(", ")} e extensão .${extension}. ${textSource}`;
-}
-
 function fillMetadata(doc) {
-    document.getElementById("meta-filename").value = doc.normalizedName;
+    document.getElementById("meta-filename").value = doc.finalName;
+    document.getElementById("meta-type").value = doc.documentType;
+    document.getElementById("meta-client").value = doc.client;
+    document.getElementById("meta-date").value = doc.extractedDate;
+    document.getElementById("meta-department").value = doc.department;
     document.getElementById("meta-folder").value = doc.folder;
-    document.getElementById("ai-score").textContent = `${doc.confidence}%`;
     document.getElementById("ai-reason").textContent = doc.reason;
 
     const tagsContainer = document.getElementById("meta-tags");
@@ -472,21 +490,43 @@ function syncSharePoint() {
     }
 
     const payload = {
-        fileName: currentDoc.normalizedName,
+        fileName: currentDoc.finalName,
         originalName: currentDoc.originalName,
+        documentType: currentDoc.documentType,
+        client: currentDoc.client,
+        extractedDate: currentDoc.extractedDate,
         targetFolder: currentDoc.folder,
         department: currentDoc.department,
-        confidence: `${currentDoc.confidence}%`,
         tags: currentDoc.tags,
         graphApiAction: "PUT /sites/{site-id}/drive/root:/{folder}/{filename}:/content",
         metadataAction: "PATCH /sites/{site-id}/lists/{list-id}/items/{item-id}/fields",
-        status: "Simulação concluída para apresentação"
+        status: "Documento publicado com sucesso no SharePoint"
     };
 
-    openDocPreview({
-        ...currentDoc,
-        payload
-    });
+    currentDoc.payload = payload;
+
+    uploadedDocs.unshift(currentDoc);
+    renderRecentDocs();
+
+    closeDocPreview();
+    showToast("Documento enviado ao SharePoint com sucesso.");
+
+    setTimeout(() => {
+        resetUpload();
+        switchWorkspaceTab("uploads", document.querySelectorAll(".workspace-tab")[2]);
+    }, 900);
+}
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    const text = document.getElementById("toast-text");
+
+    text.textContent = message;
+    toast.classList.add("active");
+
+    setTimeout(() => {
+        toast.classList.remove("active");
+    }, 3600);
 }
 
 function renderRecentDocs() {
@@ -504,11 +544,11 @@ function renderRecentDocs() {
                 </div>
 
                 <div class="doc-main">
-                    <h4>${doc.normalizedName}</h4>
-                    <p>${doc.folder} • ${doc.department} • ${doc.date}</p>
+                    <h4>${doc.finalName}</h4>
+                    <p>${doc.folder} • ${doc.documentType} • ${doc.client} • ${doc.date}</p>
                 </div>
 
-                <span class="badge">${doc.confidence}% IA</span>
+                <span class="badge">${doc.department}</span>
             </div>
         `)
         .join("");
@@ -529,7 +569,7 @@ function runSearch() {
 
                 <div class="doc-main">
                     <h4>Digite um termo para pesquisar</h4>
-                    <p>Exemplo: contrato, financeiro, nota fiscal, RH, XML ou logística.</p>
+                    <p>Exemplo: nota fiscal, contrato, cliente, fornecedor, RH ou logística.</p>
                 </div>
             </div>
         `;
@@ -540,7 +580,10 @@ function runSearch() {
     const results = uploadedDocs.filter(doc => {
         const searchable = `
             ${doc.originalName}
-            ${doc.normalizedName}
+            ${doc.finalName}
+            ${doc.documentType}
+            ${doc.client}
+            ${doc.extractedDate}
             ${doc.folder}
             ${doc.department}
             ${doc.tags.join(" ")}
@@ -560,7 +603,7 @@ function runSearch() {
 
                 <div class="doc-main">
                     <h4>Nenhum documento encontrado</h4>
-                    <p>A busca consultou nome, pasta, departamento, tags e conteúdo extraído.</p>
+                    <p>A busca consultou nome final, tipo, cliente, data, pasta, departamento e tags.</p>
                 </div>
             </div>
         `;
@@ -573,11 +616,11 @@ function runSearch() {
                     </div>
 
                     <div class="doc-main">
-                        <h4>${doc.normalizedName}</h4>
-                        <p>${doc.department} • ${doc.folder} • Tags: ${doc.tags.join(", ")}</p>
+                        <h4>${doc.finalName}</h4>
+                        <p>${doc.documentType} • ${doc.client} • ${doc.folder} • Tags: ${doc.tags.join(", ")}</p>
                     </div>
 
-                    <span class="badge">${doc.confidence}% match</span>
+                    <span class="badge">${doc.department}</span>
                 </div>
             `)
             .join("");
@@ -599,11 +642,13 @@ function openDocPreview(doc) {
     const content = document.getElementById("doc-modal-content");
 
     const payload = doc.payload || {
-        fileName: doc.normalizedName,
+        fileName: doc.finalName,
         originalName: doc.originalName,
+        documentType: doc.documentType,
+        client: doc.client,
+        extractedDate: doc.extractedDate,
         targetFolder: doc.folder,
         department: doc.department,
-        confidence: `${doc.confidence}%`,
         tags: doc.tags,
         extractedTextPreview: doc.extractedText,
         reason: doc.reason
@@ -612,18 +657,28 @@ function openDocPreview(doc) {
     content.innerHTML = `
         <div class="form-grid">
             <div class="col-full">
-                <label>Arquivo padronizado</label>
-                <div class="reason-box">${doc.normalizedName}</div>
+                <label>Arquivo padronizado pela IA</label>
+                <div class="reason-box">${doc.finalName}</div>
+            </div>
+
+            <div class="col-half">
+                <label>Tipo documental</label>
+                <div class="reason-box">${doc.documentType}</div>
+            </div>
+
+            <div class="col-half">
+                <label>Cliente / Entidade</label>
+                <div class="reason-box">${doc.client}</div>
+            </div>
+
+            <div class="col-half">
+                <label>Data extraída</label>
+                <div class="reason-box">${doc.extractedDate}</div>
             </div>
 
             <div class="col-half">
                 <label>Departamento</label>
                 <div class="reason-box">${doc.department}</div>
-            </div>
-
-            <div class="col-half">
-                <label>Confiança</label>
-                <div class="score-pill">${doc.confidence}%</div>
             </div>
 
             <div class="col-full">
@@ -647,45 +702,71 @@ function openDocPreview(doc) {
 }
 
 function closeDocPreview() {
-    document.getElementById("doc-modal").classList.remove("active");
+    const modal = document.getElementById("doc-modal");
+
+    if (modal) {
+        modal.classList.remove("active");
+    }
 }
 
 function renderSequenceDiagrams() {
     const diagrams = {
         api: {
-            lanes: ["Usuário", "SieShare UI", "Back-end/API", "IA própria", "Graph API", "SharePoint"],
+            lanes: [
+                ["Usuário", ""],
+                ["Back-End", "Aplicação Web"],
+                ["API IA", "Gemini / GPT"],
+                ["SharePoint", "Graph API + Biblioteca"]
+            ],
             steps: [
-                ["Usuário", "SieShare UI", "Seleciona arquivo"],
-                ["SieShare UI", "Back-end/API", "Envia arquivo + contexto"],
-                ["Back-end/API", "IA própria", "Solicita classificação"],
-                ["IA própria", "Back-end/API", "Retorna JSON + confiança"],
-                ["Back-end/API", "Graph API", "Upload + metadados"],
-                ["Graph API", "SharePoint", "Grava na biblioteca"],
-                ["SharePoint", "SieShare UI", "Retorna link e status"]
+                ["Usuário", "Back-End", "1. Upload do arquivo", "call"],
+                ["Back-End", "API IA", "2. Envia documento para leitura", "call"],
+                ["API IA", "Back-End", "3. Retorna JSON estruturado", "return"],
+                ["Back-End", "Back-End", "4. Processa JSON, renomeia e monta requisição", "self"],
+                ["Back-End", "SharePoint", "5. Upload via Graph API REST", "call"],
+                ["SharePoint", "SharePoint", "6. Salva na pasta final com metadados", "self"],
+                ["SharePoint", "Back-End", "7. Confirmação HTTP 201", "return"],
+                ["Back-End", "Usuário", "8. Retorna feedback com nome e pasta", "return"]
             ],
             warn: false
         },
-        syntex: {
-            lanes: ["Usuário", "SharePoint", "Syntex", "Modelo", "Biblioteca"],
+        automate: {
+            lanes: [
+                ["Usuário", ""],
+                ["Back-End", "Aplicação Web"],
+                ["API IA", "Gemini / GPT"],
+                ["Power Automate", "Fluxo"],
+                ["SharePoint", "Graph API + Biblioteca"]
+            ],
             steps: [
-                ["Usuário", "SharePoint", "Faz upload na biblioteca"],
-                ["SharePoint", "Syntex", "Aciona processamento"],
-                ["Syntex", "Modelo", "Aplica modelo configurado"],
-                ["Modelo", "Syntex", "Extrai campos"],
-                ["Syntex", "Biblioteca", "Atualiza metadados"],
-                ["Biblioteca", "Usuário", "Documento classificado depois"]
+                ["Usuário", "Back-End", "1. Upload do arquivo", "call"],
+                ["Back-End", "API IA", "2. Envia documento para leitura", "call"],
+                ["API IA", "Back-End", "3. Retorna JSON estruturado", "return"],
+                ["Back-End", "SharePoint", "4. Upload para pasta dropzone", "call"],
+                ["SharePoint", "Power Automate", "5. Dispara gatilho: novo arquivo", "call"],
+                ["Power Automate", "Power Automate", "6. Lê metadados, renomeia e valida regras", "self"],
+                ["Power Automate", "SharePoint", "7. Move arquivo para pasta final", "call"],
+                ["SharePoint", "Back-End", "8. Confirma via POST com detalhes", "return"],
+                ["Back-End", "Usuário", "9. Retorna feedback com nome e pasta", "return"]
             ],
             warn: true
         },
-        automate: {
-            lanes: ["Usuário", "Dropzone", "Power Automate", "Conector", "SharePoint"],
+        syntex: {
+            lanes: [
+                ["Usuário", ""],
+                ["Back-End", "Aplicação Web"],
+                ["Microsoft Syntex", "Processamento"],
+                ["SharePoint", "Graph API + Biblioteca"]
+            ],
             steps: [
-                ["Usuário", "Dropzone", "Salva arquivo inicial"],
-                ["Dropzone", "Power Automate", "Gatilho detecta arquivo"],
-                ["Power Automate", "Conector", "Executa condições"],
-                ["Conector", "SharePoint", "Move para pasta final"],
-                ["SharePoint", "Power Automate", "Confirma atualização"],
-                ["Power Automate", "Usuário", "Notifica conclusão"]
+                ["Usuário", "Back-End", "1. Upload do arquivo", "call"],
+                ["Back-End", "SharePoint", "2. Upload do arquivo original", "call"],
+                ["SharePoint", "SharePoint", "3. Salva o arquivo na pasta", "self"],
+                ["SharePoint", "Microsoft Syntex", "4. Aciona IA interna", "call"],
+                ["Microsoft Syntex", "SharePoint", "5. Analisa e extrai dados", "call"],
+                ["SharePoint", "SharePoint", "6. Atualiza colunas com tags extraídas", "self"],
+                ["SharePoint", "Back-End", "7. Confirmação HTTP 201", "return"],
+                ["Back-End", "Usuário", "8. Retorna feedback com nome e pasta", "return"]
             ],
             warn: true
         }
@@ -702,48 +783,59 @@ function renderSequenceDiagrams() {
 }
 
 function buildSequenceSvg(config) {
-    const width = 1120;
-    const laneTop = 40;
-    const laneHeight = 54;
-    const startY = 132;
+    const width = 1180;
+    const laneTop = 36;
+    const laneHeight = 58;
+    const startY = 138;
     const stepGap = 58;
     const laneGap = width / config.lanes.length;
 
     const laneCenters = {};
 
     config.lanes.forEach((lane, index) => {
-        laneCenters[lane] = laneGap * index + laneGap / 2;
+        laneCenters[lane[0]] = laneGap * index + laneGap / 2;
     });
 
     const lanesMarkup = config.lanes.map(lane => {
-        const x = laneCenters[lane];
+        const title = lane[0];
+        const subtitle = lane[1];
+        const x = laneCenters[title];
 
         return `
-            <rect class="seq-lane" x="${x - 78}" y="${laneTop}" width="156" height="${laneHeight}" rx="15"></rect>
-            <text class="seq-title" x="${x}" y="${laneTop + 33}" text-anchor="middle">${lane}</text>
+            <rect class="seq-lane" x="${x - 92}" y="${laneTop}" width="184" height="${laneHeight}" rx="8"></rect>
+            <text class="seq-title" x="${x}" y="${laneTop + 24}" text-anchor="middle">${title}</text>
+            <text class="seq-subtitle" x="${x}" y="${laneTop + 42}" text-anchor="middle">${subtitle}</text>
             <line class="seq-line" x1="${x}" y1="${laneTop + laneHeight}" x2="${x}" y2="${startY + config.steps.length * stepGap}"></line>
         `;
     }).join("");
 
     const stepsMarkup = config.steps.map((step, index) => {
-        const [from, to, label] = step;
+        const [from, to, label, type] = step;
         const y = startY + index * stepGap;
         const x1 = laneCenters[from];
         const x2 = laneCenters[to];
 
-        const labelX = (x1 + x2) / 2;
-        const labelY = y - 8;
+        if (type === "self") {
+            return `
+                <path class="seq-arrow ${config.warn ? "warn" : ""}" d="M ${x1 + 14} ${y} H ${x1 + 86} V ${y + 26} H ${x1 + 18}"></path>
+                <rect class="seq-activation" x="${x1 - 7}" y="${y - 14}" width="14" height="48" rx="3"></rect>
+                <text class="seq-label" x="${x1 + 102}" y="${y + 8}">${label}</text>
+            `;
+        }
 
         const safeX1 = x1 < x2 ? x1 + 18 : x1 - 18;
         const safeX2 = x1 < x2 ? x2 - 18 : x2 + 18;
+        const labelX = (x1 + x2) / 2;
+        const labelY = y - 8;
 
         return `
-            <line class="seq-arrow ${config.warn ? "warn" : ""}" x1="${safeX1}" y1="${y}" x2="${safeX2}" y2="${y}"></line>
+            <rect class="seq-activation" x="${x1 - 7}" y="${y - 18}" width="14" height="44" rx="3"></rect>
+            <line class="seq-arrow ${type === "return" ? "return" : ""} ${config.warn && type !== "return" ? "warn" : ""}" x1="${safeX1}" y1="${y}" x2="${safeX2}" y2="${y}"></line>
             <text class="seq-label" x="${labelX}" y="${labelY}" text-anchor="middle">${label}</text>
         `;
     }).join("");
 
-    const height = startY + config.steps.length * stepGap + 48;
+    const height = startY + config.steps.length * stepGap + 54;
 
     return `
         <svg class="sequence-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Diagrama de sequência">
@@ -756,8 +848,8 @@ function buildSequenceSvg(config) {
             ${lanesMarkup}
             ${stepsMarkup}
 
-            <text class="seq-note" x="26" y="${height - 18}">
-                Diagrama visual de sequência — aproximado do fluxo operacional real para apresentação executiva.
+            <text class="seq-note" x="26" y="${height - 20}">
+                Diagrama de sequência baseado no fluxo operacional: upload, análise IA, metadados, publicação e retorno ao usuário.
             </text>
         </svg>
     `;
