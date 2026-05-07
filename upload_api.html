@@ -40,76 +40,109 @@
     <main class="main-canvas">
         
         <section id="view-workspace" class="view-panel active">
-            
-            <div class="split-layout">
-                <div class="engine-column">
-                    <div class="tech-card">
-                        <div class="card-title">Motor de Ingestão Cognitiva</div>
-                        <p class="text-muted">Processa arquivos usando Gemini, estrutura metadados e envia ao SharePoint.</p>
-                        
-                        <div id="step-upload" class="engine-step active">
-                            <select id="ai-hint" class="tech-input mb-3">
-                                <option value="auto">Detecção Automática (Recomendado)</option>
-                                <option value="rh">Forçar Contexto: Recursos Humanos</option>
-                                <option value="fin">Forçar Contexto: Financeiro</option>
-                                <option value="jur">Forçar Contexto: Jurídico</option>
-                            </select>
-
-                            <div class="upload-zone" id="drop-zone">
-                                <i class="fa-solid fa-arrow-up-from-bracket icon-lg"></i>
-                                <h4>Arraste o arquivo para análise</h4>
-                                <span class="text-muted">Suporta .pdf, .docx, .xml, .xlsx</span>
-                                <input type="file" id="file-input" hidden>
-                                <button class="btn-outline mt-3" onclick="document.getElementById('file-input').click()">Procurar Arquivo</button>
-                            </div>
-                        </div>
-
-                        <div id="step-processing" class="engine-step">
-                            <div class="console-window">
-                                <div class="console-header">root@siebot-ai:~# process_document</div>
-                                <div class="console-body" id="ai-logs"></div>
-                            </div>
-                        </div>
-
-                        <div id="step-results" class="engine-step">
-                            <div class="success-alert">
-                                <i class="fa-solid fa-check-circle"></i> Documento interpretado e formatado com sucesso.
-                            </div>
-                            <div class="form-grid">
-                                <div class="col-full"><label>Nome Canônico</label><input type="text" id="meta-filename" class="tech-input hl"></div>
-                                <div class="col-half"><label>Diretório Alvo</label><input type="text" id="meta-folder" class="tech-input" readonly></div>
-                                <div class="col-half"><label>Confiança IA</label><div class="score-pill" id="ai-score">98%</div></div>
-                                <div class="col-full"><label>Tags Semânticas</label><div class="tags-container" id="meta-tags"></div></div>
-                            </div>
-                            <div class="action-row">
-                                <button class="btn-text" onclick="resetUpload()">Descartar</button>
-                                <button class="btn-filled" id="btn-submit" onclick="syncSharePoint()"><i class="fa-brands fa-microsoft"></i> Indexar no SharePoint</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tech-card mt-4">
-                        <div class="card-title">Busca Semântica Local</div>
-                        <div class="search-wrap">
-                            <input type="text" id="ai-search-input" class="tech-input" placeholder="O que você procura? Ex: contratos de 2026">
-                            <button class="btn-filled" onclick="runSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </div>
-                        <div id="search-results-list" class="mt-3"></div>
+            <section class="presentation-hero">
+                <div class="hero-copy">
+                    <span class="eyebrow"><i class="fa-solid fa-sparkles"></i> SharePoint AI Core</span>
+                    <h1>Central de upload, pesquisa e auditoria documental com IA.</h1>
+                    <p>Uma experiência separada por etapas: submeta arquivos, pesquise conteúdos indexados e acompanhe os últimos uploads sem misturar os fluxos.</p>
+                    <div class="hero-actions">
+                        <button class="btn-filled btn-lg" onclick="switchWorkspaceTab('submit')"><i class="fa-solid fa-cloud-arrow-up"></i> Começar submissão</button>
+                        <button class="btn-outline btn-lg" onclick="switchWorkspaceTab('search')"><i class="fa-solid fa-magnifying-glass-chart"></i> Abrir pesquisa</button>
                     </div>
                 </div>
+                <div class="hero-panel">
+                    <div class="hero-metric"><span>1.100</span><small>docs/mês estimados</small></div>
+                    <div class="hero-metric"><span>98%</span><small>confiança média IA</small></div>
+                    <div class="hero-pipeline">
+                        <div><i class="fa-solid fa-file-arrow-up"></i> Upload</div>
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <div><i class="fa-solid fa-brain"></i> IA</div>
+                        <i class="fa-solid fa-arrow-right"></i>
+                        <div><i class="fa-brands fa-microsoft"></i> SharePoint</div>
+                    </div>
+                </div>
+            </section>
 
-                <div class="repo-column">
-                    <div class="tech-card h-100">
+            <div class="workspace-tabs" role="tablist" aria-label="Fluxos do SharePoint AI">
+                <button class="workspace-tab active" data-tab="submit" onclick="switchWorkspaceTab('submit')"><i class="fa-solid fa-paper-plane"></i> Submissão</button>
+                <button class="workspace-tab" data-tab="search" onclick="switchWorkspaceTab('search')"><i class="fa-solid fa-magnifying-glass"></i> Pesquisa</button>
+                <button class="workspace-tab" data-tab="uploads" onclick="switchWorkspaceTab('uploads')"><i class="fa-solid fa-clock-rotate-left"></i> Últimos uploads</button>
+            </div>
+
+            <div class="workspace-shell">
+                <article id="tab-submit" class="workspace-pane active">
+                    <div class="pane-grid submit-grid">
+                        <div class="tech-card featured-card">
+                            <div class="card-kicker">Etapa 01</div>
+                            <div class="card-title">Submissão inteligente</div>
+                            <p class="text-muted">Envie um documento para análise semântica, padronização do nome e definição automática da pasta de destino.</p>
+                            <div id="step-upload" class="engine-step active">
+                                <select id="ai-hint" class="tech-input mb-3">
+                                    <option value="auto">Detecção Automática (Recomendado)</option>
+                                    <option value="rh">Forçar Contexto: Recursos Humanos</option>
+                                    <option value="fin">Forçar Contexto: Financeiro</option>
+                                    <option value="jur">Forçar Contexto: Jurídico</option>
+                                </select>
+                                <div class="upload-zone" id="drop-zone">
+                                    <i class="fa-solid fa-arrow-up-from-bracket icon-lg"></i>
+                                    <h4>Arraste o arquivo para análise</h4>
+                                    <span class="text-muted">Suporta .pdf, .docx, .xml, .xlsx</span>
+                                    <input type="file" id="file-input" hidden>
+                                    <button class="btn-outline mt-3" onclick="document.getElementById('file-input').click()">Procurar Arquivo</button>
+                                </div>
+                            </div>
+                            <div id="step-processing" class="engine-step">
+                                <div class="console-window">
+                                    <div class="console-header">root@siebot-ai:~# process_document</div>
+                                    <div class="console-body" id="ai-logs"></div>
+                                </div>
+                            </div>
+                            <div id="step-results" class="engine-step">
+                                <div class="success-alert"><i class="fa-solid fa-check-circle"></i> Documento interpretado e formatado com sucesso.</div>
+                                <div class="form-grid">
+                                    <div class="col-full"><label>Nome Canônico</label><input type="text" id="meta-filename" class="tech-input hl"></div>
+                                    <div class="col-half"><label>Diretório Alvo</label><input type="text" id="meta-folder" class="tech-input" readonly></div>
+                                    <div class="col-half"><label>Confiança IA</label><div class="score-pill" id="ai-score">98%</div></div>
+                                    <div class="col-full"><label>Tags Semânticas</label><div class="tags-container" id="meta-tags"></div></div>
+                                </div>
+                                <div class="action-row">
+                                    <button class="btn-text" onclick="resetUpload()">Descartar</button>
+                                    <button class="btn-filled" id="btn-submit" onclick="syncSharePoint()"><i class="fa-brands fa-microsoft"></i> Indexar no SharePoint</button>
+                                </div>
+                            </div>
+                        </div>
+                        <aside class="process-card">
+                            <h3>Como a submissão acontece</h3>
+                            <div class="process-step"><span>01</span><div><strong>Leitura</strong><small>Arquivo convertido para análise da IA.</small></div></div>
+                            <div class="process-step"><span>02</span><div><strong>Classificação</strong><small>Departamento, tags e pasta são sugeridos.</small></div></div>
+                            <div class="process-step"><span>03</span><div><strong>Indexação</strong><small>Documento salvo no SharePoint com metadados.</small></div></div>
+                        </aside>
+                    </div>
+                </article>
+
+                <article id="tab-search" class="workspace-pane">
+                    <div class="tech-card search-card-full">
+                        <div class="card-kicker">Etapa 02</div>
+                        <div class="card-title">Pesquisa semântica</div>
+                        <p class="text-muted">Pesquise por nome, contexto, tags ou diretório. Os resultados aparecem em uma área própria, sem disputar espaço com o upload.</p>
+                        <div class="search-wrap elevated-search">
+                            <input type="text" id="ai-search-input" class="tech-input" placeholder="O que você procura? Ex: contratos de 2026">
+                            <button class="btn-filled" onclick="runSearch()"><i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>
+                        </div>
+                        <div id="search-results-list" class="search-results-panel mt-3"></div>
+                    </div>
+                </article>
+
+                <article id="tab-uploads" class="workspace-pane">
+                    <div class="tech-card uploads-card-full">
                         <div class="card-title flex-between">
-                            <span>Repositório Ativo (Últimos Indexados)</span>
+                            <span><i class="fa-solid fa-clock-rotate-left text-primary"></i> Últimos uploads indexados</span>
                             <span class="badge">1.100 docs/mês</span>
                         </div>
-                        <p class="text-muted mb-4">Clique em um documento para inspecionar os metadados extraídos.</p>
-                        
-                        <div class="doc-list" id="recent-docs-list">
-                        </div>
+                        <p class="text-muted mb-4">Área separada para consultar o histórico recente e inspecionar metadados extraídos.</p>
+                        <div class="doc-list uploads-list" id="recent-docs-list"></div>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -193,9 +226,9 @@
                         <div class="uml-msg right" style="grid-column: 1 / 2; grid-row: 2;">1. Upload do Arquivo</div>
                         <div class="uml-msg right" style="grid-column: 2 / 3; grid-row: 3;">2. Envia doc para leitura (Base64)</div>
                         <div class="uml-msg left dashed text-primary" style="grid-column: 2 / 3; grid-row: 4;">3. Retorna JSON estruturado</div>
-                        <div class="uml-msg self" style="grid-column: 2 / 2; grid-row: 5;">4. Processa, renomeia e monta payload</div>
+                        <div class="uml-msg self" style="grid-column: 2 / 3; grid-row: 5;">4. Processa, renomeia e monta payload</div>
                         <div class="uml-msg right" style="grid-column: 2 / 4; grid-row: 6;">5. Upload via Graph API / Rest</div>
-                        <div class="uml-msg self" style="grid-column: 4 / 4; grid-row: 7;">6. Salva na pasta com metadados</div>
+                        <div class="uml-msg self" style="grid-column: 4 / 5; grid-row: 7;">6. Salva na pasta com metadados</div>
                         <div class="uml-msg left dashed" style="grid-column: 2 / 4; grid-row: 8;">7. Confirmação HTTP 201 Created</div>
                         <div class="uml-msg left dashed" style="grid-column: 1 / 2; grid-row: 9;">8. Feedback visual de sucesso</div>
                     </div>
@@ -227,7 +260,7 @@
                         <div class="uml-msg right" style="grid-column: 2 / 4; grid-row: 3;">2. Upload do arquivo cru</div>
                         <div class="uml-msg left text-danger" style="grid-column: 3 / 4; grid-row: 4;">3. Aciona IA interna</div>
                         <div class="uml-msg right text-danger" style="grid-column: 3 / 4; grid-row: 5;">4. Analisa e extrai dados (Cobrança)</div>
-                        <div class="uml-msg self" style="grid-column: 4 / 4; grid-row: 6;">5. Atualiza colunas no banco de dados</div>
+                        <div class="uml-msg self" style="grid-column: 4 / 5; grid-row: 6;">5. Atualiza colunas no banco de dados</div>
                     </div>
                 </div>
 
