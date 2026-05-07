@@ -853,4 +853,4 @@ function buildSequenceSvg(config) {
             </text>
         </svg>
     `;
-}
+} 
