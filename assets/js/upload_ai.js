@@ -1109,78 +1109,62 @@ function renderSequenceDiagrams() {
     });
 }
 
+
 function buildSequenceSvg(config) {
-    const width = 1180;
-    const laneTop = 36;
-    const laneHeight = 58;
-    const startY = 138;
-    const stepGap = 58;
-    const laneGap = width / config.lanes.length;
 
-    const laneCenters = {};
+    const actors = config.lanes.map(lane => `
+        <div class="seq-actor">
+            <h4>${lane[0]}</h4>
+            <span>${lane[1]}</span>
+        </div>
+    `).join("");
 
-    config.lanes.forEach((lane, index) => {
-        laneCenters[lane[0]] = laneGap * index + laneGap / 2;
-    });
+    const steps = config.steps.map(step => {
 
-    const lanesMarkup = config.lanes.map(lane => {
-        const title = lane[0];
-        const subtitle = lane[1];
-        const x = laneCenters[title];
-
-        return `
-            <rect class="seq-lane" x="${x - 92}" y="${laneTop}" width="184" height="${laneHeight}" rx="8"></rect>
-            <text class="seq-title" x="${x}" y="${laneTop + 24}" text-anchor="middle">${title}</text>
-            <text class="seq-subtitle" x="${x}" y="${laneTop + 42}" text-anchor="middle">${subtitle}</text>
-            <line class="seq-line" x1="${x}" y1="${laneTop + laneHeight}" x2="${x}" y2="${startY + config.steps.length * stepGap}"></line>
-        `;
-    }).join("");
-
-    const stepsMarkup = config.steps.map((step, index) => {
         const [from, to, label, type] = step;
-        const y = startY + index * stepGap;
-        const x1 = laneCenters[from];
-        const x2 = laneCenters[to];
-
-        if (type === "self") {
-            return `
-                <path class="seq-arrow ${config.warn ? "warn" : ""}" d="M ${x1 + 14} ${y} H ${x1 + 86} V ${y + 26} H ${x1 + 18}"></path>
-                <rect class="seq-activation" x="${x1 - 7}" y="${y - 14}" width="14" height="48" rx="3"></rect>
-                <text class="seq-label" x="${x1 + 102}" y="${y + 8}">${label}</text>
-            `;
-        }
-
-        const safeX1 = x1 < x2 ? x1 + 18 : x1 - 18;
-        const safeX2 = x1 < x2 ? x2 - 18 : x2 + 18;
-        const labelX = (x1 + x2) / 2;
-        const labelY = y - 8;
 
         return `
-            <rect class="seq-activation" x="${x1 - 7}" y="${y - 18}" width="14" height="44" rx="3"></rect>
-            <line class="seq-arrow ${type === "return" ? "return" : ""} ${config.warn && type !== "return" ? "warn" : ""}" x1="${safeX1}" y1="${y}" x2="${safeX2}" y2="${y}"></line>
-            <text class="seq-label" x="${labelX}" y="${labelY}" text-anchor="middle">${label}</text>
+            <div class="seq-step ${type === "return" ? "return" : ""}">
+                
+                <div class="seq-side">
+                    ${from}
+                </div>
+
+                <div class="seq-arrow-wrap">
+                    <div class="seq-step-label">
+                        ${label}
+                    </div>
+
+                    <div class="seq-arrow-line ${config.warn ? "warn" : ""}">
+                    </div>
+                </div>
+
+                <div class="seq-side">
+                    ${to}
+                </div>
+
+            </div>
         `;
     }).join("");
-
-    const height = startY + config.steps.length * stepGap + 54;
 
     return `
-        <svg class="sequence-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Diagrama de sequência">
-            <defs>
-                <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                    <path d="M0,0 L0,6 L9,3 z" fill="${config.warn ? "#f59e0b" : "#38bdf8"}"></path>
-                </marker>
-            </defs>
+        <div class="sequence-modern">
 
-            ${lanesMarkup}
-            ${stepsMarkup}
+            <div class="sequence-head">
+                ${actors}
+            </div>
 
-            <text class="seq-note" x="26" y="${height - 20}">
-                Diagrama de sequência baseado no fluxo operacional: upload, análise IA, metadados, publicação e retorno ao usuário.
-            </text>
-        </svg>
+            <div class="sequence-body">
+                ${steps}
+            </div>
+
+            <div class="sequence-footer">
+                Fluxo operacional da solução de ingestão inteligente integrada ao SharePoint.
+            </div>
+
+        </div>
     `;
-} 
+}
 
 function buildFakeDocumentPreview(doc) {
     return `
