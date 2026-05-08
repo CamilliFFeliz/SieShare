@@ -3,6 +3,7 @@
     app.modules = app.modules || {};
 
     const THEME_KEY = "sieShareTheme";
+
     let navbarEventsBound = false;
     let lastScrollPosition = window.scrollY;
 
@@ -93,7 +94,11 @@
     }
 
     function getSieShareTheme() {
-        return normalizeTheme(document.body.dataset.theme || localStorage.getItem(THEME_KEY) || "dark");
+        return normalizeTheme(
+            document.body.dataset.theme ||
+            localStorage.getItem(THEME_KEY) ||
+            "dark"
+        );
     }
 
     function isSieShareDarkMode() {
@@ -114,6 +119,7 @@
         }
 
         const isLight = theme === "light";
+
         toggle.setAttribute("aria-pressed", String(isLight));
         toggle.setAttribute("aria-label", isLight ? "Ativar modo escuro" : "Ativar modo claro");
         toggle.title = isLight ? "Ativar modo escuro" : "Ativar modo claro";
@@ -134,7 +140,9 @@
         document.body.dataset.theme = normalizedTheme;
         document.body.classList.toggle("theme-light", normalizedTheme === "light");
         document.body.classList.toggle("theme-dark", normalizedTheme === "dark");
+
         localStorage.setItem(THEME_KEY, normalizedTheme);
+
         updateThemeToggle(normalizedTheme);
 
         window.dispatchEvent(new CustomEvent("sieshare:themechange", {
@@ -240,14 +248,17 @@
     };
 
     window.SieShare = app;
+
     window.switchView = switchView;
     window.switchWorkspaceTab = switchWorkspaceTab;
     window.showToast = showToast;
+
     window.applySieShareTheme = applySieShareTheme;
     window.toggleSieShareTheme = toggleSieShareTheme;
     window.getSieShareTheme = getSieShareTheme;
     window.isSieShareDarkMode = isSieShareDarkMode;
     window.isSieShareLightMode = isSieShareLightMode;
+
     window.toggleMobileMenu = toggleMobileMenu;
     window.closeMobileMenu = closeMobileMenu;
 })();
