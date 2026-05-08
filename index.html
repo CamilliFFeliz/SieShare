@@ -4,92 +4,112 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>SieCore AI Platform</title>
+
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
+
     <header class="hero">
         <div class="overlay"></div>
+
         <div class="hero-content">
             <h1>SieCore AI Platform</h1>
-            <p> Plataforma inteligente para gestão documental, integrada com IA, Microsoft Syntex e Power Automate. </p>
-            <div class="hero-buttons"> <a href="upload_api.html" class="hero-link">Explorar Plataforma</a> </div>
+
+            <p>
+                Plataforma inteligente para gestão documental, integrada com IA,
+                automações corporativas e organização inteligente de arquivos.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="upload_api.html" class="hero-link">
+                    Explorar Plataforma
+                </a>
+            </div>
         </div>
     </header>
+
     <section class="plans">
+
         <div class="plan-card">
             <h2>IA Intelligence</h2>
-            <p>Classificação automática de documentos com análise semântica local para maior organização e agilidade.
+
+            <p>
+                Classificação automática de documentos com análise semântica
+                para maior organização, rastreabilidade e agilidade operacional.
             </p>
+
             <ul>
                 <li>✔ Classificação inteligente</li>
                 <li>✔ Análise de palavras-chave</li>
                 <li>✔ Organização automática</li>
-                <li>✔ Insights rápidos</li>
+                <li>✔ Geração de metadados</li>
             </ul>
         </div>
+
         <div class="plan-card">
-            <h2>Microsoft Syntex</h2>
-            <p> Extração automatizada de informações e categorização corporativa avançada para otimizar processos
-                documentais.</p>
+            <h2>SharePoint Inteligente</h2>
+
+            <p>
+                Simulação de organização documental com nome final, tipo,
+                departamento, tags, entidade e pasta de destino sugerida.
+            </p>
+
             <ul>
-                <li>✔ OCR Inteligente</li>
-                <li>✔ Processamento documental</li>
-                <li>✔ Templates corporativos</li>
-                <li>✔ Compliance</li>
+                <li>✔ Nome padronizado</li>
+                <li>✔ Pasta sugerida automaticamente</li>
+                <li>✔ Tags semânticas</li>
+                <li>✔ Prévia visual do documento</li>
             </ul>
         </div>
+
         <div class="plan-card">
-            <h2>Power Automate</h2>
-            <p> Fluxos automatizados que integram SharePoint, Teams e processos internos para ampliar a eficiência
-                operacional. </p>
+            <h2>Automação Corporativa</h2>
+
+            <p>
+                Estrutura preparada para evoluir futuramente com API IA,
+                Microsoft Graph API, Power Automate e SharePoint real.
+            </p>
+
             <ul>
-                <li>✔ Automação de aprovação</li>
-                <li>✔ Fluxos empresariais</li>
-                <li>✔ Integração Microsoft</li>
-                <li>✔ Notificações automáticas</li>
+                <li>✔ Fluxo de upload</li>
+                <li>✔ Retorno em JSON</li>
+                <li>✔ Simulação de publicação</li>
+                <li>✔ Base para integração real</li>
             </ul>
         </div>
+
     </section>
-    <section class="main-platform" id="platform">
-        <div class="tabs"> <button class="tab active" onclick="openTab('upload')"> Submeter Arquivo </button> <button
-                class="tab" onclick="openTab('search')"> Pesquisa Inteligente </button> <button class="tab"
-                onclick="openTab('uploads')"> Últimos Uploads </button> </div>
-        <div class="content-area"> <!-- UPLOAD -->
-            <div class="tab-content active" id="upload">
-                <h2>Upload Inteligente</h2>
-                <div class="upload-box"> <input type="file" id="fileInput"> <button onclick="uploadFile()"> Processar
-                        Documento </button> </div>
-                <div id="uploadResult"></div>
-            </div> <!-- SEARCH -->
-            <div class="tab-content" id="search">
-                <h2>Pesquisa Inteligente</h2>
-                <div class="search-box"> <input type="text" id="searchInput"
-                        placeholder="Pesquisar contratos, RH, financeiro..."> <button onclick="searchDocs()"> Buscar
-                    </button> </div>
-                <div id="searchResults"></div>
-            </div> <!-- UPLOADS -->
-            <div class="tab-content" id="uploads">
-                <h2>Últimos Uploads</h2>
-                <div id="uploadsList"></div>
-            </div>
-        </div>
-    </section>
+
     <section class="diagram-section">
-        <h2>Fluxo Inteligente da Plataforma</h2> <svg viewBox="0 0 1200 400">
-            <rect x="40" y="150" width="180" height="80" rx="20" /> <text x="75" y="195">Upload Documento</text>
-            <line x1="220" y1="190" x2="380" y2="190" />
-            <polygon points="380,190 360,180 360,200" />
-            <rect x="400" y="150" width="180" height="80" rx="20" /> <text x="450" y="195">IA Analysis</text>
-            <line x1="580" y1="190" x2="740" y2="190" />
-            <polygon points="740,190 720,180 720,200" />
-            <rect x="760" y="150" width="180" height="80" rx="20" /> <text x="790" y="195">Syntex Process</text>
-            <line x1="940" y1="190" x2="1080" y2="190" />
-            <polygon points="1080,190 1060,180 1060,200" />
-            <rect x="1000" y="150" width="180" height="80" rx="20" /> <text x="1015" y="195">Automated Flow</text>
+        <h2>Fluxo Inteligente da Plataforma</h2>
+
+        <svg viewBox="0 0 1200 400" role="img" aria-label="Fluxo inteligente da plataforma">
+            <rect x="40" y="150" width="180" height="80" rx="20"></rect>
+            <text x="75" y="195">Upload</text>
+
+            <line x1="220" y1="190" x2="380" y2="190"></line>
+            <polygon points="380,190 360,180 360,200"></polygon>
+
+            <rect x="400" y="150" width="180" height="80" rx="20"></rect>
+            <text x="440" y="195">API IA</text>
+
+            <line x1="580" y1="190" x2="740" y2="190"></line>
+            <polygon points="740,190 720,180 720,200"></polygon>
+
+            <rect x="760" y="150" width="180" height="80" rx="20"></rect>
+            <text x="790" y="195">Metadados</text>
+
+            <line x1="940" y1="190" x2="1080" y2="190"></line>
+            <polygon points="1080,190 1060,180 1060,200"></polygon>
+
+            <rect x="1000" y="150" width="180" height="80" rx="20"></rect>
+            <text x="1030" y="195">Destino</text>
         </svg>
     </section>
+
 </body>
 
 </html>
